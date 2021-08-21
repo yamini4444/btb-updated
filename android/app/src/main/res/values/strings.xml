@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">btbNative</string>
+    <string name="facebook_app_id">544360640042542</string>
+    <string name="fb_login_protocol_scheme">fb544360640042542</string>
+    <string name="facebook_client_token">9030da78d155552d46ca1fa234d35c04</string>
+    <string name="server_client_id">480648947620-osbrk9l023l7umq63ovdoqmmkc6mtpl3.apps.googleusercontent.com</string>
+</resources>
