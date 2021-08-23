@@ -41,7 +41,7 @@ const width = Dimensions.get('window').width;
  
 
 const SignUp = ({ navigation }) => {
-  console.log(navigation)
+  // console.log(navigation)
   const [recaptcha, setRecaptcha] = useState('');
   const [dataValidated, setDataValidated] = useState(false);
   const [dataSubmitted, setDataSubmitted] = useState(false);
@@ -65,12 +65,12 @@ const SignUp = ({ navigation }) => {
 
 
   useEffect(async () => {
-    setFillData(false);
-    // if (dataValidated && !dataSubmitted) {
-    //   await _captchaRef.refreshToken();
-    //   console.log('token from use', recaptcha)
-    //   postData();
-    // }
+    // setFillData(false);
+    if (dataValidated && !dataSubmitted) {
+      await _captchaRef.refreshToken();
+      console.log('token from use', recaptcha)
+      postData();
+    }
   }, [recaptcha, dataValidated, dataSubmitted]);
 
 
@@ -132,11 +132,11 @@ const SignUp = ({ navigation }) => {
     console.log('second token',)
     console.log(data)
     setDataSubmitted(true);
-    // dispatch(signUp(data,navigation));
+    dispatch(signUp(data,navigation));
   }
 
   // const displayReCaptcha = async () => {
-  //   if (dataValidated) {
+  //   if (dataSubmitted==false) {
   //     return <ReCaptchaV3
   //       ref={(ref: RecaptchaV3) => _captchaRef = ref}
   //       action="signinregister"
@@ -280,10 +280,10 @@ const SignUp = ({ navigation }) => {
           </View>
 
           {/* {displayReCaptcha()}       */}
+          {!dataSubmitted ?
           <ReCaptchaV3
-            // ref={(ref: RecaptchaV3) => _captchaRef = ref}
-            ref={_captchaRef}
-            // action="signinregister"
+            ref={(ref: RecaptchaV3) => _captchaRef = ref}
+            action="signinregister"
             captchaDomain={'https://app.bookbtb.com'}
             siteKey={'6LeudroaAAAAAMqbusMXJqt9HMzUQBgABPcaktCf'}
             onReceiveToken={(token) => {
@@ -292,6 +292,8 @@ const SignUp = ({ navigation }) => {
               return true;
             }} 
             />
+            : <View></View>
+          }
           <TouchableOpacity
             onPress={() => ValidationFunction()}
             //onPress={doLogin} 
@@ -324,7 +326,6 @@ const SignUp = ({ navigation }) => {
 
           <TouchableOpacity
             onPress={Actions.dispatch('Login')}>
-
             <Text
               style={styles.signUpView}>
               Login

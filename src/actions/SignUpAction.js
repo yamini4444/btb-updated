@@ -31,12 +31,11 @@ export function signUp(data,navigation) {
             // })
             .then(res => {
                 console.log(res)
-
                 // console.log(res)
                 if (res.ok === true || res.status === 200) {
                     console.log(res, 'rest')
                     dispatch({ type: 'SHOW_SIGNUP_RESPONSE', payload: res });
-                    navigation.navigate("Login")
+                    navigation.navigate("MainHome")
 
                 } else {
                     console.log('reatsonef ', res)
