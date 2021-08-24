@@ -296,9 +296,6 @@ const Login = ({ navigation }) => {
         <View flex={1.5}>
           <View
             style={styles.socialLogin}>
-
-
-
             <TouchableOpacity
               onPress={fbLogin}
             //style={styles.fbView}

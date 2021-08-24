@@ -7154,6 +7154,11 @@
   dependencies:
     "moment" "^2.22.0"
 
+"react-native-device-token@^1.0.3":
+  "integrity" "sha1-FM4n50Of3vSniG4+W6/VllKF5Wk="
+  "resolved" "https://registry.npmjs.org/react-native-device-token/-/react-native-device-token-1.0.3.tgz"
+  "version" "1.0.3"
+
 "react-native-drawer@2.5.1":
   "integrity" "sha512-cxcQNbSWy5sbGi7anSVp6EDr6JarOBMY9lbFOeLFeVYbONiudoqRKbgEsSDgSw3/LFCLvUXK5zdjXCOedeytxQ=="
   "resolved" "https://registry.npmjs.org/react-native-drawer/-/react-native-drawer-2.5.1.tgz"
@@ -7226,6 +7231,11 @@
   "version" "1.13.3"
   dependencies:
     "fbjs" "^1.0.0"
+
+"react-native-recaptcha-that-works@^1.1.0":
+  "integrity" "sha512-p/J0xSUZ2/1De4QlzQsvOdGor7c+5YeLC6aNWKKaR+m5/2fU0bvUOBBkmXmaFETM4riUiKSTv9Gdy6E2dSiZPg=="
+  "resolved" "https://registry.npmjs.org/react-native-recaptcha-that-works/-/react-native-recaptcha-that-works-1.1.0.tgz"
+  "version" "1.1.0"
 
 "react-native-recaptcha-v3@^0.0.16":
   "integrity" "sha512-uZqMwasOwXM8o6vSZLq8TrY7X9eCIwgr3OqgGfLcuOAk7L0+5hWcWFUvjgUJG2cdzqB5080chKlBFXi1bzgMNA=="
