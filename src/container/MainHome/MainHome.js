@@ -26,8 +26,6 @@ import { h, w } from '../../utils/Dimensions';
 import styles from './styles';
 
 
-
-
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 

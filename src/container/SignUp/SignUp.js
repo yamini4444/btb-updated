@@ -30,6 +30,7 @@ import { connect } from 'react-redux';
 // import { LoginAPI } from './../../actions/Login';
 import AsyncStorage from '@react-native-community/async-storage';
 import { signUp } from '../../actions/SignUpAction';
+const DeviceInfo = require('react-native-device-info');
 
 let _captchaRef = createRef();
 
@@ -44,6 +45,7 @@ const SignUp = ({ navigation }) => {
   const [recaptcha, setRecaptcha] = useState('');
   const [dataValidated, setDataValidated] = useState(false);
   const [dataSubmitted, setDataSubmitted] = useState(false);
+  const [deviceUniqueId, setDeviceUniqueId] = useState(null);
   const screenStatus = navigation.isFocused();
   const dispatch = useDispatch();
   const [Show, setShow] = useState(false);
@@ -66,6 +68,8 @@ const SignUp = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(async () => {
+    //setting unique id 
+    setDeviceUniqueId(DeviceInfo.deviceUniqueId());
     // setFillData(false);
     if (dataValidated && !dataSubmitted && socialProvider == null) {
       await _captchaRef.refreshToken();
@@ -127,6 +131,7 @@ const SignUp = ({ navigation }) => {
       password: password,
       recaptchaToken: recaptcha.recaptcha,
       clientId: 'Btb.App',
+      deviceId: deviceUniqueId
     }
     console.log('second token',)
     console.log(data)
@@ -282,7 +287,8 @@ const SignUp = ({ navigation }) => {
       recaptchaToken: recaptcha.recaptcha,
       clientId: 'Btb.App',
       socialProvider: socialProvider,
-      socialUserId: socialUserId
+      socialUserId: socialUserId,
+      deviceId: deviceUniqueId
     }
     await _captchaRef.refreshToken();
     console.log('second token',)
@@ -309,7 +315,6 @@ const SignUp = ({ navigation }) => {
         </View>
 
         <View flex={1.43}>
-
           <TextInput
             style={styles.inputFieldContainer}
             placeholderTextColor="#383B3F"
@@ -346,7 +351,6 @@ const SignUp = ({ navigation }) => {
             value={email}
           />
 
-
           <View style={{ height: 35, justifyContent: 'center', borderRadius: 25, borderWidth: 1, marginHorizontal: h(6.5), marginVertical: 5 }}>
             <DatePicker
               style={{ width: 300 }}
@@ -365,9 +369,6 @@ const SignUp = ({ navigation }) => {
                   marginLeft: 200
                 },
                 dateInput: {
-                  //backgroundColor:'red',
-
-                  // borderRadius:25,
                   color: '#000',
                   borderWidth: 0,
                   marginLeft: h(2.5),
@@ -385,7 +386,6 @@ const SignUp = ({ navigation }) => {
               onDateChange={(dob) => {
                 setDob(dob);
               }}
-
             />
           </View>
 
@@ -407,7 +407,6 @@ const SignUp = ({ navigation }) => {
 
             <TouchableOpacity
               style={styles.touchPassword}
-              // onPress={PasswordVisibility}
               onPress={() => setShowPassword(!showPassword)}>
               {!showPassword ? (
                 <Image
@@ -440,7 +439,6 @@ const SignUp = ({ navigation }) => {
           }
           <TouchableOpacity
             onPress={() => ValidationFunction()}
-            //onPress={doLogin} 
             style={styles.buttonContainer}>
             <Text style={styles.AndText}>SIGN UP</Text>
           </TouchableOpacity>
@@ -465,7 +463,6 @@ const SignUp = ({ navigation }) => {
                 source={require('../../assets/icon/google-glass-logo.png')}
               />
             </TouchableOpacity>
-
           </View>
 
           <TouchableOpacity
@@ -475,7 +472,6 @@ const SignUp = ({ navigation }) => {
               Login
             </Text>
           </TouchableOpacity>
-
         </View>
         <Modal
           animationType="slide"
@@ -488,9 +484,7 @@ const SignUp = ({ navigation }) => {
         >
 
           <View style={styles.centeredView}>
-
             <View style={styles.modalView}>
-
               <View flex={1.43}>
                 <Text numberOfLines={1} adjustsFontSizeToFit style={styles.txt}>
                   Fill Details to Complete Signup
@@ -528,9 +522,6 @@ const SignUp = ({ navigation }) => {
                         marginLeft: 170
                       },
                       dateInput: {
-                        //backgroundColor:'red',
-
-                        // borderRadius:25,
                         color: '#000',
                         borderWidth: 0,
                         marginLeft: h(2.5),
@@ -553,16 +544,13 @@ const SignUp = ({ navigation }) => {
                 </View>
                 <TouchableOpacity
                   onPress={() => ValidationFunction()}
-                  //onPress={doLogin} 
                   style={styles.buttonContainer}>
                   <Text style={styles.AndText}>COMPLETE SIGN UP</Text>
                 </TouchableOpacity>
-
               </View>
             </View>
           </View>
         </Modal>
-
       </View>
     </TouchableWithoutFeedback>
 

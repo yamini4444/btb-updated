@@ -30,8 +30,6 @@ import {LoginAPI} from './../../actions/Login';
 import AsyncStorage from '@react-native-community/async-storage';
 import Styles from '../../component/Drawer/Styles';
 
-
-
 let checkedServerStatus = true;
 
 const height = Dimensions.get('window').height;

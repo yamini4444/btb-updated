@@ -7154,10 +7154,10 @@
   dependencies:
     "moment" "^2.22.0"
 
-"react-native-device-token@^1.0.3":
-  "integrity" "sha1-FM4n50Of3vSniG4+W6/VllKF5Wk="
-  "resolved" "https://registry.npmjs.org/react-native-device-token/-/react-native-device-token-1.0.3.tgz"
-  "version" "1.0.3"
+"react-native-device-info@^8.3.1":
+  "integrity" "sha512-tEJlyECZeFVZcEJVSZIN8OGghnlrZmSy0J8PGU4mCNk4KMTvx3tHpHMc6c7afl3lS2vOBP3jslzHzRMDgh42cA=="
+  "resolved" "https://registry.npmjs.org/react-native-device-info/-/react-native-device-info-8.3.1.tgz"
+  "version" "8.3.1"
 
 "react-native-drawer@2.5.1":
   "integrity" "sha512-cxcQNbSWy5sbGi7anSVp6EDr6JarOBMY9lbFOeLFeVYbONiudoqRKbgEsSDgSw3/LFCLvUXK5zdjXCOedeytxQ=="

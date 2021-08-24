@@ -26,22 +26,22 @@ import { h, w } from '../../utils/Dimensions';
 import styles from './styles';
 import { connect } from 'react-redux';
 import { LoginAPI } from './../../actions/Login';
-
 import AsyncStorage from '@react-native-community/async-storage';
 import Styles from '../../component/Drawer/Styles';
+const DeviceInfo = require('react-native-device-info');
 
 let captchaForm = createRef();
-
 let checkedServerStatus = true;
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 
 const Login = ({ navigation }) => {
-  console.log(navigation)
+  const [recaptcha, setRecaptcha] = useState('');
+  const [dataValidated, setDataValidated] = useState(false);
+  const [dataSubmitted, setDataSubmitted] = useState(false);
+  const [deviceUniqueId, setDeviceUniqueId] = useState(null);
   const screenStatus = navigation.isFocused();
-
-  const [user, setUser] = useState({})
   const [Show, setShow] = useState(false);
   const [shareVisible, shareSetVisible] = useState(false);
   const [email, setEmail] = useState('');
@@ -60,7 +60,73 @@ const Login = ({ navigation }) => {
   const userInfo = {};
   const white = require(`../../assets/icon/eye.png`);
   const black = require(`../../assets/icon/password-hide.png`);
+  //social login elements
+  const [user, setUser] = useState({})
+  const [socialProvider, setSocialProvider] = useState(null);
+  const [socialUserId, setSocialUserId] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
 
+
+
+  const colorChange = async () => {
+    setshowButton(!showButton);
+  };
+
+  useEffect(async () => {
+    //setting unique id 
+    setDeviceUniqueId(DeviceInfo.deviceUniqueId());
+    // setFillData(false);
+    if (dataValidated && !dataSubmitted && socialProvider == null) {
+      await _captchaRef.refreshToken();
+      console.log('token from use', recaptcha)
+      postData();
+    }
+
+    if (dataValidated && !dataSubmitted && socialProvider != null) {
+      console.log("i am here")
+      await _captchaRef.refreshToken();
+      console.log(recaptcha)
+      console.log('token from use', recaptcha)
+      postSocialData();
+    }
+  }, [recaptcha, dataValidated, dataSubmitted]);
+
+  const ValidationFunction = (socialProvider) => {
+    let pass = password;
+    let regPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@@#\$%\^&\*])(?=.{8,})/;
+    let text = email;
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (email == '' || email == null) {
+      Alert.alert("Please Enter Email");
+    } else if (reg.test(text) == false) {
+      Alert.alert("Please Enter Valid Email");
+    } else if (socialProvider == null && (password == '' || password == null)) {
+      Alert.alert("Please Enter Password");
+    } else if (socialProvider == null && (regPass.test(pass) == false)) {
+      Alert.alert("Please Enter Valid Password");
+    }
+    else {
+      setDataValidated(true);
+      console.log('reacpt', recaptcha.recaptcha)
+      // postData();
+    }
+  }
+
+  const postData = async () => {
+    let data = {
+      email: email,
+      password: password,
+      recaptchaToken: recaptcha.recaptcha,
+      clientId: 'Btb.App',
+      deviceId: deviceUniqueId
+    }
+    console.log('second token',)
+    console.log(data)
+    setDataSubmitted(true);
+    dispatch(signUp(data, navigation));
+  }
+
+  //Social Login 
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -74,13 +140,25 @@ const Login = ({ navigation }) => {
     });
     isSignedIn()
   }, [])
-
-  const signIn = async () => {
+  const gLogin = async () => {
     try {
+      setSocialProvider("Google")
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo) 
-      setUser(userInfo)
+      console.log('userinfo', userInfo.user)
+      setUser(userInfo.user)
+      if (userInfo) {
+        if (userInfo.familyName)
+          setFName(userInfo.familyName)
+        if (userInfo.givenName)
+          setLName(userInfo.givenName)
+        if (userInfo.id)
+          setSocialUserId(userInfo.id)
+        if (userInfo.email)
+          setEmail(userInfo.email)
+        setModalVisible(true);
+        ValidationFunction(socialProvider);
+      }
     } catch (error) {
       console.log('Message', error.message);
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -105,7 +183,19 @@ const Login = ({ navigation }) => {
   const getCurrentUserInfo = async () => {
     try {
       const userInfo = await GoogleSignin.signInSilently();
-      setUser(userInfo);
+      setUser(userInfo.user);
+      console.log('userinfo', userInfo.user)
+      if (userInfo) {
+        if (userInfo.familyName)
+          setFName(userInfo.familyName)
+        if (userInfo.givenName)
+          setLName(userInfo.givenName)
+        if (userInfo.id)
+          setSocialUserId(userInfo.id)
+        if (userInfo.email)
+          setEmail(userInfo.email)
+        setModalVisible(true);
+      }
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_REQUIRED) {
         alert('User has not signed in yet');
@@ -130,18 +220,39 @@ const Login = ({ navigation }) => {
 
   useEffect(() => {
     setFillData(false);
-  }, []);
+  }, [socialProvider, modalVisible]);
 
-  const fbLogin = () => {
-    LoginManager.logInWithPermissions(["public_profile"]).then(
+  const currentProfile = async () => {
+    await Profile.getCurrentProfile().then(
+      function (currentProfile) {
+        console.log('crt', currentProfile)
+        if (currentProfile) {
+          if (currentProfile.firstName)
+            setFName(currentProfile.firstName)
+          if (currentProfile.lastName)
+            setLName(currentProfile.lastName)
+          if (currentProfile.userID)
+            setSocialUserId(currentProfile.userID)
+          setModalVisible(true);
+          ValidationFunction(socialProvider);
+        }
+      }
+    );
+  }
+
+  const fbLogin = async () => {
+    setSocialProvider('facebook');
+    await LoginManager.logInWithPermissions(["public_profile"]).then(
       function (result) {
         if (result.isCancelled) {
           console.log("Login cancelled");
         } else {
+          console.log(result, 'result')
           console.log(
             "Login success with permissions: " +
             result.grantedPermissions.toString()
           );
+          console.log(Profile)
           currentProfile();
         }
       },
@@ -149,45 +260,26 @@ const Login = ({ navigation }) => {
         console.log("Login fail with error: " + error);
       }
     );
-
   }
 
-
-
-  const currentProfile = Profile.getCurrentProfile().then(
-    function (currentProfile) {
-      if (currentProfile) {
-        console.log("The current logged user is: " +
-          currentProfile.name
-          + ". His profile id is: " +
-          currentProfile.userID
-        );
-      }
+  const postSocialData = async () => {
+    let data = {
+      email: email,
+      recaptchaToken: recaptcha.recaptcha,
+      clientId: 'Btb.App',
+      socialProvider: socialProvider,
+      socialUserId: socialUserId,
+      deviceId: deviceUniqueId
     }
-  );
+    await _captchaRef.refreshToken();
+    console.log('second token',)
+    console.log(data)
+    setDataSubmitted(true);
+    //signinSocialAction
+    // dispatch(signUp(data, navigation));
+  }
 
-
-  const colorChange = async () => {
-    setshowButton(!showButton);
-
-  };
-
-  const onMessage = event => {
-    console.log('event', event);
-    if (event && event.nativeEvent.data) {
-      if (['cancel', 'error', 'expired'].includes(event.nativeEvent.data)) {
-        captchaForm.hide();
-        return;
-      } else {
-        console.log('Verified code from Google', event.nativeEvent.data);
-        setTimeout(() => {
-          captchaForm.hide();
-          setFillData(true);
-          // do what ever you want here
-        }, 1500);
-      }
-    }
-  };
+  //end social login
 
   // Return Ui For Login Page
   return (
@@ -202,7 +294,6 @@ const Login = ({ navigation }) => {
         </View>
 
         <View flex={1.43}>
-
           <TextInput
             style={styles.inputFieldContainer}
             placeholderTextColor="#383B3F"
@@ -213,7 +304,6 @@ const Login = ({ navigation }) => {
             onChangeText={(email) => setEmail(email)}
             value={email}
           />
-
 
           <View
             style={styles.passwordBox}>
@@ -249,7 +339,6 @@ const Login = ({ navigation }) => {
 
           <View
             style={styles.rememberView}>
-
             <TouchableOpacity onPress={() => colorChange()}>
               <ImageBackground
                 source={require('../../assets/image/Outline_Button.png')}
@@ -298,6 +387,25 @@ const Login = ({ navigation }) => {
             style={styles.socialLogin}>
             <TouchableOpacity
               onPress={fbLogin}
+              style={styles.fbView}>
+              <Image
+                style={styles.innerTxt}
+                source={require('../../assets/icon/Facebook-glass.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={gLogin}
+              style={styles.gmailView}>
+              <Image
+                style={styles.innerTxt}
+                source={require('../../assets/icon/google-glass-logo.png')}
+              />
+            </TouchableOpacity>
+          </View>
+          {/* <View
+            style={styles.socialLogin}>
+            <TouchableOpacity
+              onPress={fbLogin}
             //style={styles.fbView}
             >
               <LoginButton
@@ -335,9 +443,7 @@ const Login = ({ navigation }) => {
                 <Text>Logout</Text>
               </TouchableOpacity>
             }
-
-
-          </View>
+          </View> */}
 
           <TouchableOpacity onPress={Actions.SignUp}>
             <Text style={styles.signUpView}>
