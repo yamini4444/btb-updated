@@ -42,7 +42,7 @@ export default StyleSheet.create({
   },
   inputFieldContainer: {
     alignSelf: 'center',
-    fontSize: 16,
+    fontSize: 14,
     borderColor:'#000',
     // borderColor: '#000',
     borderWidth: w(0.28),
@@ -53,10 +53,10 @@ export default StyleSheet.create({
     paddingLeft: w(5)
   },
   inputFieldContainer2: {
-    // alignSelf: 'center',
+     alignSelf: 'center',
     // borderColor: '#000',
     // borderWidth: w(0.28),
-    fontSize: 16,
+    fontSize: 14,
     width: w(60),
     height: h(5),
     borderRadius: w(10),

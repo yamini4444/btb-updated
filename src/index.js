@@ -10,6 +10,7 @@ import AdminHome from './container/AdminHome/AdminHome';
 import StaffLogin from './container/StaffLogin/StaffLogin';
 import ForgetScreen from './container/ForgetScreen/ForgetScreen';
 import OtpScreen from './container/OtpScreen/OtpScreen';
+import SocialPopup from './container/SignUp/SocialPopup';
 
 
 import { connect } from "react-redux";
@@ -72,6 +73,13 @@ class Root extends React.Component {
                   wrap={false}
                   key="MainHome"
                   title="MainHome"
+                />
+                 <Scene
+                  component={SocialPopup} //classname
+                  hideNavBar={true}
+                  wrap={false}
+                  key="SocialPopup"
+                  title="SocialPopup"
                 />
                 <Scene
                   component={AdminHome} //classname

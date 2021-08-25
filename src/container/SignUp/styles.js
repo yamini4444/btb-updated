@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { h, w } from '../../utils/Dimensions';
+import { back } from 'react-native/Libraries/Animated/Easing';
+import { h, height, w } from '../../utils/Dimensions';
 
 export default StyleSheet.create({
   mainContainerBox:{
@@ -13,9 +14,10 @@ export default StyleSheet.create({
   },
   txt: {
     alignSelf: 'center',
-    fontSize: 30,
+    fontSize: 18,
     fontWeight: 'bold',
-    top: h(13),
+    // marginTop:10,
+    position:'absolute',
     color: '#383B3F'
   },
   Otpcontainer: {
@@ -45,6 +47,19 @@ export default StyleSheet.create({
     fontSize: 14,
     borderColor:'#000',
     marginVertical:h(1),
+    // borderColor: '#000',
+    borderWidth: w(0.28),
+    width: w(75),
+    height: h(5),
+    borderRadius: w(10),
+    // top: h(21),
+    paddingLeft: w(5)
+  },
+  inputFieldContainerSocial: {
+    alignSelf: 'center',
+    fontSize: 14,
+    borderColor:'#000',
+    marginTop:50,
     // borderColor: '#000',
     borderWidth: w(0.28),
     width: w(75),
@@ -170,7 +185,7 @@ export default StyleSheet.create({
     borderRadius: w(10),
   },
   modelView: {
-    backgroundColor: '#000',
+    backgroundColor: 'green',
     alignSelf: 'center',
     height: h(36),
     width: w(83),
@@ -178,6 +193,7 @@ export default StyleSheet.create({
     borderRadius: w(10),
     justifyContent: 'center',
     alignItems: 'center',
+    opacity: 0.5
   },
   modelTxT: {
     color: '#fff',
@@ -208,4 +224,49 @@ export default StyleSheet.create({
   txtJoined: {
     color: '#fa8072',
   },
+  centeredView: {
+   
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical:180,
+    // marginLeft:20,
+    height:380,
+    width:45,
+    alignSelf:"center"
+},
+modalView: {
+    // margin: 100,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+        width: 0,
+        height: 2
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5
+},
+button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+},
+buttonOpen: {
+    backgroundColor: "#F194FF",
+},
+buttonClose: {
+    backgroundColor: "#2196F3",
+},
+textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+},
+modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+}
 })
