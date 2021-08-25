@@ -29,8 +29,9 @@ import { LoginAPI } from './../../actions/Login';
 import AsyncStorage from '@react-native-community/async-storage';
 import Styles from '../../component/Drawer/Styles';
 const DeviceInfo = require('react-native-device-info');
+import ReCaptchaV3 from '@haskkor/react-native-recaptchav3';
 
-let captchaForm = createRef();
+let _captchaRef = createRef();
 let checkedServerStatus = true;
 
 const height = Dimensions.get('window').height;
@@ -41,11 +42,12 @@ const Login = ({ navigation }) => {
   const [dataValidated, setDataValidated] = useState(false);
   const [dataSubmitted, setDataSubmitted] = useState(false);
   const [deviceUniqueId, setDeviceUniqueId] = useState(null);
+  const [deviceName, setDeviceName] = useState(null);
   const screenStatus = navigation.isFocused();
   const [Show, setShow] = useState(false);
   const [shareVisible, shareSetVisible] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('jaimahakal@gmail.com');
+  const [password, setPassword] = useState('ROFLFjsjk@1237');
   const [hidePassword, sethidePassword] = useState(true);
   const [uiRender, setuiRender] = useState(false);
   const [showButton, setshowButton] = useState(false);
@@ -71,11 +73,21 @@ const Login = ({ navigation }) => {
   const colorChange = async () => {
     setshowButton(!showButton);
   };
-
+  console.log(socialProvider, 'socialProvider')
+  //setting unique id 
+  // DeviceInfo.getDeviceName().then((deviceName) => {
+  //   setDeviceName(deviceName);
+  //   console.log(deviceName)
+  // });
   useEffect(async () => {
-    //setting unique id 
-    setDeviceUniqueId(DeviceInfo.deviceUniqueId());
+    console.log(DeviceInfo)
+    console.log(dataValidated, 'dataValidated')
+    console.log(dataSubmitted, 'dataSubmitted')
+
     // setFillData(false);
+    console.log(dataValidated, 'dataValidated')
+    console.log(dataSubmitted, 'dataSubmitted')
+    console.log(socialProvider, 'socialProvider')
     if (dataValidated && !dataSubmitted && socialProvider == null) {
       await _captchaRef.refreshToken();
       console.log('token from use', recaptcha)
@@ -96,6 +108,7 @@ const Login = ({ navigation }) => {
     let regPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@@#\$%\^&\*])(?=.{8,})/;
     let text = email;
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    setDataValidated(false)
     if (email == '' || email == null) {
       Alert.alert("Please Enter Email");
     } else if (reg.test(text) == false) {
@@ -118,18 +131,22 @@ const Login = ({ navigation }) => {
       password: password,
       recaptchaToken: recaptcha.recaptcha,
       clientId: 'Btb.App',
-      deviceId: deviceUniqueId
+      deviceId: deviceUniqueId,
+      deviceName: deviceName,
+      rememberMe: true
     }
     console.log('second token',)
     console.log(data)
     setDataSubmitted(true);
-    dispatch(signUp(data, navigation));
+    dispatch(LoginAPI(data, navigation));
   }
 
   //Social Login 
 
   useEffect(() => {
     GoogleSignin.configure({
+      //ClientId: "574073884202-1c2cherr7mvgq23mep4hh72tpq1q3ll8.apps.googleusercontent.com",
+      //ClientSecret: "BXKFKvpnU-l7tlROrxeggjJy",
       webClientId: '480648947620-osbrk9l023l7umq63ovdoqmmkc6mtpl3.apps.googleusercontent.com',
       androidClientId: '480648947620-gjmacpsonl1uvvbq8o38r0lkbl5d6scq.apps.googleusercontent.com',
       offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
@@ -364,13 +381,28 @@ const Login = ({ navigation }) => {
                 Forgot Password?
               </Text>
             </TouchableOpacity>
+            {!dataSubmitted ?
+              <ReCaptchaV3
+                ref={(ref: RecaptchaV3) => _captchaRef = ref}
+                action="signinregister"
+                captchaDomain={'https://app.bookbtb.com'}
+                siteKey={'6LeudroaAAAAAMqbusMXJqt9HMzUQBgABPcaktCf'}
+                onReceiveToken={(token) => {
+                  console.log('from token', token)
+                  setRecaptcha({ recaptcha: token });
+                  return true;
+                }}
+              />
+              : <View></View>
+            }
           </View>
+
           <TouchableOpacity
-            onPress={() => captchaForm.show()}
-            //onPress={doLogin} 
+            onPress={() => ValidationFunction()}
             style={styles.buttonContainer}>
             <Text style={styles.AndText}>LOGIN</Text>
           </TouchableOpacity>
+
           {/* <ConfirmGoogleCaptcha
           // eslint-disable-next-line no-undef
           ref={(_ref: {show: () => void} | null) => (captchaForm = _ref)}

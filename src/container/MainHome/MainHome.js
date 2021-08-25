@@ -24,6 +24,7 @@ import { Actions } from 'react-native-router-flux';
 import { IconAsset, Strings, UiColor } from '../../theme';
 import { h, w } from '../../utils/Dimensions';
 import styles from './styles';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 const height = Dimensions.get('window').height;
@@ -32,9 +33,25 @@ const width = Dimensions.get('window').width;
 const MainHome = ({ navigation }) => {
   console.log(navigation)
   const screenStatus = navigation.isFocused();
+  const [userFullName, setUserFullName] = useState(null)
 
- 
+  useEffect(() => {
+    readData()
+  }, [])
 
+  
+  const readData = async () => {
+    try {
+      const userFullName = await AsyncStorage.getItem('fullName')
+      console.log(userFullName)
+      if (userFullName !== null) {
+        setUserFullName(userFullName)
+      }
+    } catch (e) {
+      alert('Failed to fetch the data from storage')
+    }
+  }
+  
 
   // Return Ui For Home Page
   return (
@@ -42,7 +59,7 @@ const MainHome = ({ navigation }) => {
       onPress={() => { Keyboard.dismiss(); }}>
       <View
         style={styles.mainContainerBox}>
-        <Text>Hello Home</Text>
+        <Text>Welcome,{userFullName}</Text>
 
 
       </View>

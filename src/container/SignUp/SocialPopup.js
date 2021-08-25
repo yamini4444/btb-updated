@@ -1,6 +1,5 @@
 import React, { useState, useEffect, createRef, useRef } from 'react';
 import ReCaptchaV3 from '@haskkor/react-native-recaptchav3';
-import Recaptcha from 'react-native-recaptcha-that-works';
 
 import {
     View,

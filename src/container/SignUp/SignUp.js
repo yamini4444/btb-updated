@@ -29,7 +29,7 @@ import styles from './styles';
 import { connect } from 'react-redux';
 // import { LoginAPI } from './../../actions/Login';
 import AsyncStorage from '@react-native-community/async-storage';
-import { signUp } from '../../actions/SignUpAction';
+import { signUp, signUpSocial } from '../../actions/SignUpAction';
 const DeviceInfo = require('react-native-device-info');
 
 let _captchaRef = createRef();
@@ -46,13 +46,15 @@ const SignUp = ({ navigation }) => {
   const [dataValidated, setDataValidated] = useState(false);
   const [dataSubmitted, setDataSubmitted] = useState(false);
   const [deviceUniqueId, setDeviceUniqueId] = useState(null);
+  const [deviceName, setDeviceName] = useState(null);
   const screenStatus = navigation.isFocused();
   const dispatch = useDispatch();
   const [Show, setShow] = useState(false);
-  const [email, setEmail] = useState('check@fm.com');
+  const [email, setEmail] = useState('jaimahakal@gmail.com');
   const [fName, setFName] = useState('jack');
   const [lName, setLName] = useState('reacher');
-  const [dob, setDob] = useState('1981-03-01');
+  const [phone, setPhone] = useState("9939393939");
+  const [dob, setDob] = useState('1990-09-09');
   const [password, setPassword] = useState('ROFLFjsjk@1237');
   const [captcha, setCaptcha] = useState('');
   const [showButton, setshowButton] = useState(false);
@@ -69,14 +71,20 @@ const SignUp = ({ navigation }) => {
 
   useEffect(async () => {
     //setting unique id 
-    setDeviceUniqueId(DeviceInfo.deviceUniqueId());
+    setDeviceUniqueId(DeviceInfo.getUniqueId());
+    setDeviceName(DeviceInfo.getDeviceName());
+    DeviceInfo.getDeviceName().then((deviceName) => {
+      setDeviceName(deviceName);
+    });
+    console.log('defv', deviceName)
+
     // setFillData(false);
     if (dataValidated && !dataSubmitted && socialProvider == null) {
       await _captchaRef.refreshToken();
       console.log('token from use', recaptcha)
       postData();
     }
-   
+
     if (dataValidated && !dataSubmitted && socialProvider != null) {
       console.log("i am here")
       await _captchaRef.refreshToken();
@@ -84,7 +92,7 @@ const SignUp = ({ navigation }) => {
       console.log('token from use', recaptcha)
       postSocialData();
     }
-  }, [recaptcha, dataValidated, dataSubmitted]);
+  }, [recaptcha, dataValidated, dataSubmitted, socialProvider, deviceUniqueId]);
 
   const colorChange = async () => {
     setshowButton(!showButton);
@@ -100,12 +108,15 @@ const SignUp = ({ navigation }) => {
     let regPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@@#\$%\^&\*])(?=.{8,})/;
     let text = email;
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    setDataValidated(false);
     if (fName == '' || fName == null) {
       Alert.alert("Please Enter First Name");
     } else if (lName == '' || lName == null) {
       Alert.alert("Please Enter Last Name");
     } else if (email == '' || email == null) {
       Alert.alert("Please Enter Email");
+    } else if ((phone == '' || phone == null) && (socialProvider != null)) {
+      Alert.alert("Please Enter Phone No");
     } else if (reg.test(text) == false) {
       Alert.alert("Please Enter Valid Email");
     } else if (dob == '' || dob == null) {
@@ -118,7 +129,6 @@ const SignUp = ({ navigation }) => {
     else {
       setDataValidated(true);
       console.log('reacpt', recaptcha.recaptcha)
-      // postData();
     }
   }
 
@@ -170,6 +180,7 @@ const SignUp = ({ navigation }) => {
         if (userInfo.email)
           setEmail(userInfo.email)
         setModalVisible(true);
+        setDataValidated(false)
         ValidationFunction(socialProvider);
       }
     } catch (error) {
@@ -249,6 +260,7 @@ const SignUp = ({ navigation }) => {
           if (currentProfile.userID)
             setSocialUserId(currentProfile.userID)
           setModalVisible(true);
+          setDataValidated(false);
           ValidationFunction(socialProvider);
         }
       }
@@ -283,19 +295,22 @@ const SignUp = ({ navigation }) => {
       firstName: fName,
       lastName: lName,
       email: email,
+      phone: phone,
       dateOfBirth: dob,
+      optOut: true,
       recaptchaToken: recaptcha.recaptcha,
       clientId: 'Btb.App',
-      socialProvider: socialProvider,
-      socialUserId: socialUserId,
-      deviceId: deviceUniqueId
+      provider: socialProvider,
+      providerKey: socialUserId,
+      deviceId: deviceUniqueId,
+      deviceName: deviceName
     }
     await _captchaRef.refreshToken();
     console.log('second token',)
     console.log(data)
     setDataSubmitted(true);
     //signinSocialAction
-    // dispatch(signUp(data, navigation));
+    dispatch(signUpSocial(data, navigation));
   }
 
   //end social login
@@ -384,6 +399,7 @@ const SignUp = ({ navigation }) => {
                 // ... You can check the source to find the other keys.
               }}
               onDateChange={(dob) => {
+                // setDob(dob + "T00:00:00s");
                 setDob(dob);
               }}
             />
@@ -504,6 +520,21 @@ const SignUp = ({ navigation }) => {
                   <View></View>
                 }
 
+                {!phone ?
+                  <TextInput
+                    style={styles.inputFieldContainerSocial}
+                    placeholderTextColor="#383B3F"
+                    color="#4D4D4D"
+                    underlineColorAndroid="transparent"
+                    placeholder="Enter Phone No"
+                    autoCapitalize="none"
+                    underlineColorAndroid="transparent"
+                    onChangeText={(phone) => setPhone(phone)}
+                    value={phone}
+                  /> :
+                  <View></View>
+                }
+
                 <View style={{ height: 35, justifyContent: 'center', borderRadius: 25, borderWidth: 1, marginVertical: 15 }}>
                   <DatePicker
                     style={{ width: 300 }}
@@ -537,7 +568,8 @@ const SignUp = ({ navigation }) => {
                       // ... You can check the source to find the other keys.
                     }}
                     onDateChange={(dob) => {
-                      setDob(dob);
+                      // setDob(dob + "T00:00:00s")
+                      setDob(dob)
                     }}
 
                   />

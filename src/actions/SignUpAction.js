@@ -1,7 +1,8 @@
 import * as ActionTypes from '../constants/ActionTypes';
 import { BaseUrl } from '../constants/api';
 import { Alert } from 'react-native';
-import { Actions } from 'react-native-router-flux'; 
+import { Actions } from 'react-native-router-flux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 // export function signUp(data) {
 //     return {
@@ -10,10 +11,58 @@ import { Actions } from 'react-native-router-flux';
 //     }
 // };
 
-export function signUp(data,navigation) {
+export function signUp(data, navigation) {
     console.log("datadatda", data);
     return (dispatch) => {
-        fetch(`https://app.bookbtb.com/api/v1/Auth/register`, {
+        fetch(BaseUrl + `api/v1/Auth/register`, {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+
+            .then((res) => res.json())
+            .then(res => {
+                console.log('restponse', res)
+                console.log('state', res.state)
+                console.log('data res', res.profile);
+                if (res.state == "succeeded") {
+                    //storing userinfo to localstorge
+                    AsyncStorage.setItem("fullName", res.profile.name)
+                    AsyncStorage.setItem("firstName", res.profile.givenName)
+                    AsyncStorage.setItem("lastName", res.profile.surName)
+                    AsyncStorage.setItem("email", res.profile.email)
+                    AsyncStorage.setItem("userId", res.profile.id)
+                    AsyncStorage.setItem("refreshToken", res.refreshToken)
+                    AsyncStorage.setItem("accessToken", res.accessToken.token)
+                    AsyncStorage.setItem("accessTokenExpiry", res.accessToken.expiresIn)
+                    
+                    //signup disptach
+                    dispatch({ type: 'SHOW_SIGNUP_RESPONSE', payload: res });
+                    Alert.alert("Registration Successful")
+                    //navigating to homepage after success
+                    navigation.navigate("MainHome")
+                } else {
+                    console.log('reatsonef ', res)
+                    navigation.navigate("Login")
+                    if (res.message != '')
+                        Alert.alert('messagesss', res.message);
+                    else
+                        Alert.alert('Something went wrong!');
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    }
+};
+
+export function signUpSocial(data, navigation) {
+    console.log("datadatda", data);
+    return (dispatch) => {
+        fetch(BaseUrl + `api/v1/AppAuth/external-register`, {
             method: 'POST',
             headers: {
                 'accept': 'application/json',
@@ -29,20 +78,19 @@ export function signUp(data,navigation) {
             //         throw res.message
             //     }
             // })
+            // .then((res) => res.json())
             .then(res => {
                 console.log(res)
-                if (res.ok === true || res.status === 200) {
-                    console.log(res, 'rest')
+                if (res.status === 200) {
                     dispatch({ type: 'SHOW_SIGNUP_RESPONSE', payload: res });
                     navigation.navigate("MainHome")
-
                 } else {
                     console.log('reatsonef ', res)
-                   navigation.navigate("Login")
-                    if(res.message!='')
-                        Alert.alert('message',res.message);
+                    navigation.navigate("Login")
+                    if (res.messageeee != '')
+                        Alert.alert('message', res.message);
                     else
-                        Alert.alert('Something went wrong!');    
+                        Alert.alert('Something went wrong!');
                 }
             })
             .catch((e) => {
@@ -50,4 +98,3 @@ export function signUp(data,navigation) {
             });
     }
 };
-

@@ -1,6 +1,8 @@
 import * as ActionTypes from '../constants/ActionTypes';
 import { BaseUrl } from '../constants/api';
-import {Alert, AsyncStorage} from 'react-native';
+import {Alert} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+
 export function loginRes(data) {
     return {
         type: ActionTypes.LOGIN,
@@ -8,7 +10,7 @@ export function loginRes(data) {
     }
 };
 
-export function loginAPI(data) {
+export function loginAPI(data,navigation) {
     return (dispatch) => {
         fetch(BaseUrl + `/login`, {
             method: 'POST',
@@ -21,17 +23,25 @@ export function loginAPI(data) {
             .then((res) => res.json())
             .then(res => {
                 console.log(res)
-                if (res.success === true || res.success === "true") {
+                if (res.state == "succeeded") {
+                    AsyncStorage.setItem("fullName", res.profile.name)
+                    AsyncStorage.setItem("firstName", res.profile.givenName)
+                    AsyncStorage.setItem("lastName", res.profile.surName)
+                    AsyncStorage.setItem("email", res.profile.email)
+                    AsyncStorage.setItem("userId", res.profile.id)
+                    AsyncStorage.setItem("refreshToken", res.refreshToken)
+                    AsyncStorage.setItem("accessToken", res.accessToken.token)
+                    AsyncStorage.setItem("accessTokenExpiry", res.accessToken.expiresIn)
                     dispatch(loginRes(res));
-                    AsyncStorage.setItem('email',res.data.userName);
-
+                    navigation.navigate("MainHome")
                 } else {
+                    console.log(res)
                     Alert.alert(res.message);
                     dispatch(loginRes(res));
                 }
             })
             .catch((e) => {
-                //  console.warn(e);
+                 console.log(e);
             });
     }
 };
