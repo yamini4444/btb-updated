@@ -25,7 +25,7 @@ import { IconAsset, Strings, UiColor } from '../../theme';
 import { h, w } from '../../utils/Dimensions';
 import styles from './styles';
 import { connect } from 'react-redux';
-import { LoginAPI } from './../../actions/Login';
+import { loginDisptach } from './../../actions/Login';
 import AsyncStorage from '@react-native-community/async-storage';
 import Styles from '../../component/Drawer/Styles';
 const DeviceInfo = require('react-native-device-info');
@@ -73,14 +73,15 @@ const Login = ({ navigation }) => {
   const colorChange = async () => {
     setshowButton(!showButton);
   };
-  console.log(socialProvider, 'socialProvider')
-  //setting unique id 
-  // DeviceInfo.getDeviceName().then((deviceName) => {
-  //   setDeviceName(deviceName);
-  //   console.log(deviceName)
-  // });
+
+  const callToAction = async (type) => {
+    await setDataSubmitted(true);
+    console.log('jai ho ')
+    navigation.navigate(type)
+  }
+
   useEffect(async () => {
-    console.log(DeviceInfo)
+    // console.log(DeviceInfo)
     console.log(dataValidated, 'dataValidated')
     console.log(dataSubmitted, 'dataSubmitted')
 
@@ -89,17 +90,17 @@ const Login = ({ navigation }) => {
     console.log(dataSubmitted, 'dataSubmitted')
     console.log(socialProvider, 'socialProvider')
     if (dataValidated && !dataSubmitted && socialProvider == null) {
-      await _captchaRef.refreshToken();
-      console.log('token from use', recaptcha)
+      // await _captchaRef.refreshToken();
+      console.log('token from post data', recaptcha)
       postData();
     }
 
     if (dataValidated && !dataSubmitted && socialProvider != null) {
       console.log("i am here")
-      await _captchaRef.refreshToken();
+      // await _captchaRef.refreshToken();
       console.log(recaptcha)
       console.log('token from use', recaptcha)
-      postSocialData();
+      // postSocialData();
     }
   }, [recaptcha, dataValidated, dataSubmitted]);
 
@@ -135,18 +136,16 @@ const Login = ({ navigation }) => {
       deviceName: deviceName,
       rememberMe: true
     }
-    console.log('second token',)
+    console.log('second token.jkgkjhhlhjkh',)
     console.log(data)
     setDataSubmitted(true);
-    dispatch(LoginAPI(data, navigation));
+    dispatch(loginDisptach(data, navigation));
   }
 
   //Social Login 
 
   useEffect(() => {
     GoogleSignin.configure({
-      //ClientId: "574073884202-1c2cherr7mvgq23mep4hh72tpq1q3ll8.apps.googleusercontent.com",
-      //ClientSecret: "BXKFKvpnU-l7tlROrxeggjJy",
       webClientId: '480648947620-osbrk9l023l7umq63ovdoqmmkc6mtpl3.apps.googleusercontent.com',
       androidClientId: '480648947620-gjmacpsonl1uvvbq8o38r0lkbl5d6scq.apps.googleusercontent.com',
       offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
@@ -234,11 +233,6 @@ const Login = ({ navigation }) => {
   };
   // signOut()
 
-
-  useEffect(() => {
-    setFillData(false);
-  }, [socialProvider, modalVisible]);
-
   const currentProfile = async () => {
     await Profile.getCurrentProfile().then(
       function (currentProfile) {
@@ -293,7 +287,7 @@ const Login = ({ navigation }) => {
     console.log(data)
     setDataSubmitted(true);
     //signinSocialAction
-    // dispatch(signUp(data, navigation));
+    dispatch(loginDisptach(data, navigation));
   }
 
   //end social login
@@ -376,7 +370,7 @@ const Login = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={Actions.ForgetScreen}>
+              onPress={() => callToAction('ForgetScreen')}>
               <Text style={styles.forgotButton}>
                 Forgot Password?
               </Text>
@@ -393,7 +387,7 @@ const Login = ({ navigation }) => {
                   return true;
                 }}
               />
-              : <View></View>
+              : <View>{console.log('No captcha zone')}</View>
             }
           </View>
 
@@ -403,22 +397,12 @@ const Login = ({ navigation }) => {
             <Text style={styles.AndText}>LOGIN</Text>
           </TouchableOpacity>
 
-          {/* <ConfirmGoogleCaptcha
-          // eslint-disable-next-line no-undef
-          ref={(_ref: {show: () => void} | null) => (captchaForm = _ref)}
-          // siteKey={'6LfH7nIaAAAAAEgbcYkQz0wbmUFHs2R79lRj0EsC'}
-          siteKey={'6LeDXPEaAAAAAOEOSDo-4lkVHU3TV5e3tf-5AhCe'}
-          baseUrl={'http://3.140.234.233/pitch/apiV1'}
-          languageCode="en"
-          onMessage={onMessage}
-        />
-          */}
         </View>
         <View flex={1.5}>
           <View
             style={styles.socialLogin}>
             <TouchableOpacity
-              onPress={fbLogin}
+              onPress={() => fbLogin}
               style={styles.fbView}>
               <Image
                 style={styles.innerTxt}
@@ -426,7 +410,7 @@ const Login = ({ navigation }) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={gLogin}
+              onPress={() => gLogin}
               style={styles.gmailView}>
               <Image
                 style={styles.innerTxt}
@@ -434,75 +418,13 @@ const Login = ({ navigation }) => {
               />
             </TouchableOpacity>
           </View>
-          {/* <View
-            style={styles.socialLogin}>
-            <TouchableOpacity
-              onPress={fbLogin}
-            //style={styles.fbView}
-            >
-              <LoginButton
 
-                onLoginFinished={
-                  (error, result) => {
-                    if (error) {
-                      console.log("login has error: " + result.error);
-                    } else if (result.isCancelled) {
-                      console.log("login is cancelled.");
-                    } else {
-                      console.log(result)
-                      AccessToken.getCurrentAccessToken().then(
-                        (data) => {
-                          console.log(data);
-                          console.log('access token');
-                          console.log(data.accessToken.toString())
-                          currentProfile();
-                        }
-                      )
-                    }
-                  }
-                }
-                onLogoutFinished={() => console.log("logout.")} />
-            </TouchableOpacity>
-
-            {!user.idToken ?
-              <GoogleSigninButton
-                style={{ width: 192, height: 48 }}
-                size={GoogleSigninButton.Size.Wide}
-                color={GoogleSigninButton.Color.Dark}
-                onPress={signIn}
-              /> :
-              <TouchableOpacity onPress={signOut}>
-                <Text>Logout</Text>
-              </TouchableOpacity>
-            }
-          </View> */}
-
-          <TouchableOpacity onPress={Actions.SignUp}>
+          <TouchableOpacity onPress={() => callToAction('SignUp')}>
             <Text style={styles.signUpView}>
               Sign Up
             </Text>
           </TouchableOpacity>
         </View>
-
-        {/* {loginLoading || socialLoading ? (
-          <View
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              top: 5,
-              bottom: 0,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'transparent',
-            }}>
-            <View>
-              <ActivityIndicator size="large" color="#000" />
-            </View>
-          </View>
-        ) : null} */}
-
-
       </View>
     </TouchableWithoutFeedback>
   );
