@@ -43,7 +43,7 @@ export function signUp(data, navigation) {
                     dispatch({ type: 'SHOW_SIGNUP_RESPONSE', payload: res });
                     Alert.alert("Registration Successful")
                     //navigating to homepage after success
-                    navigation.navigate("MainHome")
+                    navigation.navigate("Home")
                 } else {
                     console.log('reatsonef ', res)
                     navigation.navigate("Login")
@@ -60,7 +60,6 @@ export function signUp(data, navigation) {
 };
 
 export function signUpSocial(data, navigation) {
-    console.log("datadatda", data);
     return (dispatch) => {
         fetch(BaseUrl + `api/v1/AppAuth/external-register`, {
             method: 'POST',
@@ -83,10 +82,10 @@ export function signUpSocial(data, navigation) {
                 console.log(res)
                 if (res.status === 200) {
                     dispatch({ type: 'SHOW_SIGNUP_RESPONSE', payload: res });
-                    navigation.navigate("MainHome")
+                    navigation.navigate("Home")
                 } else {
                     console.log('reatsonef ', res)
-                    navigation.navigate("Login")
+                    navigation.navigate("Home")
                     if (res.messageeee != '')
                         Alert.alert('message', res.message);
                     else

@@ -94,6 +94,14 @@ const SignUp = ({ navigation }) => {
     }
   }, [recaptcha, dataValidated, dataSubmitted, socialProvider, deviceUniqueId]);
 
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
+    };
+  }, []);
+
+
   const colorChange = async () => {
     setshowButton(!showButton);
 
@@ -101,6 +109,19 @@ const SignUp = ({ navigation }) => {
   const ShowRecaptcha = () => {
 
   }
+
+  const callToAction = async (type) => {
+    await setDataSubmitted(true);
+    console.log('jai ho ')
+    navigation.navigate(type)
+  }
+
+  const handleBackButtonClick = async () => {
+    await setDataSubmitted(true);
+    navigation.goBack();
+    return true;
+  }
+
 
   const ValidationFunction = (socialProvider) => {
 
@@ -168,17 +189,17 @@ const SignUp = ({ navigation }) => {
       setSocialProvider("Google")
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log('userinfo', userInfo.user)
-      setUser(userInfo.user)
       if (userInfo) {
-        if (userInfo.familyName)
-          setFName(userInfo.familyName)
-        if (userInfo.givenName)
-          setLName(userInfo.givenName)
-        if (userInfo.id)
-          setSocialUserId(userInfo.id)
-        if (userInfo.email)
-          setEmail(userInfo.email)
+        if (userInfo.user.familyName)
+          setLName(userInfo.user.familyName)
+        if (userInfo.user.givenName)
+          setFName(userInfo.user.givenName)
+        if (userInfo.user.id)
+          setSocialUserId(userInfo.user.id)
+        if (userInfo.user.email)
+          setEmail(userInfo.user.email)
+        if (userInfo.user.photo)
+          AsyncStorage.setItem("photo", userInfo.user.photo)
         setModalVisible(true);
         setDataValidated(false)
         ValidationFunction(socialProvider);
@@ -208,7 +229,6 @@ const SignUp = ({ navigation }) => {
     try {
       const userInfo = await GoogleSignin.signInSilently();
       setUser(userInfo.user);
-      console.log('userinfo', userInfo.user)
       if (userInfo) {
         if (userInfo.familyName)
           setFName(userInfo.familyName)
@@ -218,6 +238,8 @@ const SignUp = ({ navigation }) => {
           setSocialUserId(userInfo.id)
         if (userInfo.email)
           setEmail(userInfo.email)
+        if (userInfo.photo)
+          AsyncStorage.setItem("photo", userInfo.photo)
         setModalVisible(true);
       }
     } catch (error) {
@@ -291,6 +313,7 @@ const SignUp = ({ navigation }) => {
   }
 
   const postSocialData = async () => {
+    console.log(socialUserId)
     let data = {
       firstName: fName,
       lastName: lName,
@@ -482,7 +505,7 @@ const SignUp = ({ navigation }) => {
           </View>
 
           <TouchableOpacity
-            onPress={Actions.dispatch('Login')}>
+            onPress={() => callToAction('Login')}>
             <Text
               style={styles.signUpView}>
               Login
@@ -494,7 +517,7 @@ const SignUp = ({ navigation }) => {
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
+            // Alert.alert("Modal has been closed.");
             setModalVisible(!modalVisible);
           }}
         >
