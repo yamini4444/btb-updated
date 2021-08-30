@@ -25,7 +25,7 @@ import { IconAsset, Strings, UiColor } from '../../theme';
 import { h, w } from '../../utils/Dimensions';
 import styles from './styles';
 import { connect } from 'react-redux';
-import { loginDisptach } from './../../actions/Login';
+import { loginDisptach,loginSocialDisptach } from '../../actions/LoginAction';
 import AsyncStorage from '@react-native-community/async-storage';
 import Styles from '../../component/Drawer/Styles';
 const DeviceInfo = require('react-native-device-info');
@@ -44,10 +44,11 @@ const Login = ({ navigation }) => {
   const [deviceUniqueId, setDeviceUniqueId] = useState(null);
   const [deviceName, setDeviceName] = useState(null);
   const screenStatus = navigation.isFocused();
+  const dispatch = useDispatch();
   const [Show, setShow] = useState(false);
   const [shareVisible, shareSetVisible] = useState(false);
-  const [email, setEmail] = useState('jaimahakal@gmail.com');
-  const [password, setPassword] = useState('ROFLFjsjk@1237');
+  const [email, setEmail] = useState('dev_host_lb@yopmail.com');
+  const [password, setPassword] = useState('Asf-2020');
   const [hidePassword, sethidePassword] = useState(true);
   const [uiRender, setuiRender] = useState(false);
   const [showButton, setshowButton] = useState(false);
@@ -81,7 +82,10 @@ const Login = ({ navigation }) => {
   }
 
   useEffect(async () => {
-    // console.log(DeviceInfo)
+    setDeviceUniqueId(DeviceInfo.getUniqueId());
+    DeviceInfo.getDeviceName().then((deviceName) => {
+      setDeviceName(deviceName);
+    });
     console.log(dataValidated, 'dataValidated')
     console.log(dataSubmitted, 'dataSubmitted')
 
@@ -90,17 +94,16 @@ const Login = ({ navigation }) => {
     console.log(dataSubmitted, 'dataSubmitted')
     console.log(socialProvider, 'socialProvider')
     if (dataValidated && !dataSubmitted && socialProvider == null) {
-      // await _captchaRef.refreshToken();
+       await _captchaRef.refreshToken();
       console.log('token from post data', recaptcha)
       postData();
     }
 
     if (dataValidated && !dataSubmitted && socialProvider != null) {
-      console.log("i am here")
-      // await _captchaRef.refreshToken();
+      await _captchaRef.refreshToken();
       console.log(recaptcha)
-      console.log('token from use', recaptcha)
-      // postSocialData();
+      console.log('token from social', recaptcha)
+      postSocialData();
     }
   }, [recaptcha, dataValidated, dataSubmitted]);
 
@@ -116,9 +119,10 @@ const Login = ({ navigation }) => {
       Alert.alert("Please Enter Valid Email");
     } else if (socialProvider == null && (password == '' || password == null)) {
       Alert.alert("Please Enter Password");
-    } else if (socialProvider == null && (regPass.test(pass) == false)) {
-      Alert.alert("Please Enter Valid Password");
-    }
+    } 
+    // else if (socialProvider == null && (regPass.test(pass) == false)) {
+    //   Alert.alert("Please Enter Valid Password");
+    // }
     else {
       setDataValidated(true);
       console.log('reacpt', recaptcha.recaptcha)
@@ -134,11 +138,13 @@ const Login = ({ navigation }) => {
       clientId: 'Btb.App',
       deviceId: deviceUniqueId,
       deviceName: deviceName,
-      rememberMe: true
+      rememberMe: true,
+      provider: "string",
+      providerKey: "string",
     }
-    console.log('second token.jkgkjhhlhjkh',)
-    console.log(data)
+    console.log('data from post data',data)
     setDataSubmitted(true);
+    console.log("hello dispatch")
     dispatch(loginDisptach(data, navigation));
   }
 
@@ -164,18 +170,18 @@ const Login = ({ navigation }) => {
       console.log('userinfo', userInfo.user)
       setUser(userInfo.user)
       if (userInfo) {
-        if (userInfo.familyName)
-          setFName(userInfo.familyName)
-        if (userInfo.givenName)
-          setLName(userInfo.givenName)
-        if (userInfo.id)
-          setSocialUserId(userInfo.id)
-        if (userInfo.email)
-          setEmail(userInfo.email)
+        if (userInfo.user.id)
+          setSocialUserId(userInfo.user.id)
+        if (userInfo.user.email)
+          setEmail(userInfo.user.email)
+        if (userInfo.user.photo)
+          AsyncStorage.setItem("photo", userInfo.user.photo)
         setModalVisible(true);
+        setDataValidated(false)
         ValidationFunction(socialProvider);
       }
     } catch (error) {
+      setDataSubmitted(false);
       console.log('Message', error.message);
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('User Cancelled the Login Flow');
@@ -202,17 +208,16 @@ const Login = ({ navigation }) => {
       setUser(userInfo.user);
       console.log('userinfo', userInfo.user)
       if (userInfo) {
-        if (userInfo.familyName)
-          setFName(userInfo.familyName)
-        if (userInfo.givenName)
-          setLName(userInfo.givenName)
         if (userInfo.id)
           setSocialUserId(userInfo.id)
         if (userInfo.email)
           setEmail(userInfo.email)
+        if (userInfo.photo)
+          AsyncStorage.setItem("photo", userInfo.photo)
         setModalVisible(true);
       }
     } catch (error) {
+      setDataSubmitted(false)
       if (error.code === statusCodes.SIGN_IN_REQUIRED) {
         alert('User has not signed in yet');
         console.log('User has not signed in yet');
@@ -256,6 +261,7 @@ const Login = ({ navigation }) => {
     await LoginManager.logInWithPermissions(["public_profile"]).then(
       function (result) {
         if (result.isCancelled) {
+          setDataSubmitted(false)
           console.log("Login cancelled");
         } else {
           console.log(result, 'result')
@@ -268,6 +274,7 @@ const Login = ({ navigation }) => {
         }
       },
       function (error) {
+        setDataSubmitted(false)
         console.log("Login fail with error: " + error);
       }
     );
@@ -278,16 +285,18 @@ const Login = ({ navigation }) => {
       email: email,
       recaptchaToken: recaptcha.recaptcha,
       clientId: 'Btb.App',
-      socialProvider: socialProvider,
-      socialUserId: socialUserId,
-      deviceId: deviceUniqueId
+      provider: socialProvider,
+      providerKey: socialUserId,
+      deviceId: deviceUniqueId,
+      deviceName: deviceName,
+      rememberMe: true,
     }
     await _captchaRef.refreshToken();
     console.log('second token',)
     console.log(data)
     setDataSubmitted(true);
     //signinSocialAction
-    dispatch(loginDisptach(data, navigation));
+    dispatch(loginSocialDisptach(data, navigation));
   }
 
   //end social login
@@ -378,7 +387,7 @@ const Login = ({ navigation }) => {
             {!dataSubmitted ?
               <ReCaptchaV3
                 ref={(ref: RecaptchaV3) => _captchaRef = ref}
-                action="signinregister"
+                action="applogin"
                 captchaDomain={'https://app.bookbtb.com'}
                 siteKey={'6LeudroaAAAAAMqbusMXJqt9HMzUQBgABPcaktCf'}
                 onReceiveToken={(token) => {
@@ -402,7 +411,7 @@ const Login = ({ navigation }) => {
           <View
             style={styles.socialLogin}>
             <TouchableOpacity
-              onPress={() => fbLogin}
+              onPress={() => fbLogin()}
               style={styles.fbView}>
               <Image
                 style={styles.innerTxt}
@@ -410,7 +419,7 @@ const Login = ({ navigation }) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => gLogin}
+              onPress={() => gLogin()}
               style={styles.gmailView}>
               <Image
                 style={styles.innerTxt}

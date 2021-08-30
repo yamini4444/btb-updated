@@ -12,12 +12,12 @@ import AsyncStorage from '@react-native-community/async-storage';
 // };
 
 export function signUp(data, navigation) {
-    console.log("datadatda", data);
     return (dispatch) => {
-        fetch(BaseUrl + `api/v1/Auth/register`, {
+         //fetch(BaseUrl + `api/v1/Auth/register`, {
+            fetch(BaseUrl + `api/v1/AppAuth/register`, {
             method: 'POST',
             headers: {
-                'accept': 'application/json',
+                'accept': 'application/json,text/plain, */*',
                 'content-type': 'application/json',
             },
             body: JSON.stringify(data)
@@ -25,9 +25,7 @@ export function signUp(data, navigation) {
 
             .then((res) => res.json())
             .then(res => {
-                console.log('restponse', res)
-                console.log('state', res.state)
-                console.log('data res', res.profile);
+                console.log('response from server', res)
                 if (res.state == "succeeded") {
                     //storing userinfo to localstorge
                     AsyncStorage.setItem("fullName", res.profile.name)
@@ -45,7 +43,6 @@ export function signUp(data, navigation) {
                     //navigating to homepage after success
                     navigation.navigate("Home")
                 } else {
-                    console.log('reatsonef ', res)
                     navigation.navigate("Login")
                     if (res.message != '')
                         Alert.alert('messagesss', res.message);
@@ -77,7 +74,7 @@ export function signUpSocial(data, navigation) {
             //         throw res.message
             //     }
             // })
-            // .then((res) => res.json())
+            .then((res) => res.json())
             .then(res => {
                 console.log(res)
                 if (res.status === 200) {

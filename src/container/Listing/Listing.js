@@ -1,12 +1,12 @@
 import React, { useState, useEffect, createRef, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList,SafeAreaView,TouchableOpacity,Image,TextInput } from 'react-native';
+import { View, Text, StyleSheet, FlatList,SafeAreaView,TouchableOpacity,Image,TextInput,BackHandler, } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { w, h } from '../../utils/Dimensions';
-import {bookingDispatch} from '../../actions/BookingAction';
+import {listingDispatch} from '../../actions/ListingAction';
 import { Actions } from 'react-native-router-flux';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const Booking = ({navigation}) => {
+const Listing = ({navigation}) => {
   const dispatch = useDispatch();
   const[accessToken,setAccessToken] = useState(null);
   const[roomsListing,setRoomsListing] = useState(null);
@@ -35,7 +35,18 @@ const Booking = ({navigation}) => {
     }
   }, [listingDataAPI]);
 
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
+    };
+  }, []);
 
+  const handleBackButtonClick = async () => {
+    await setDataSubmitted(true);
+    navigation.goBack();
+    return true;
+  }
 
   // useEffect(async() => {
   //   if (listingDataAPI && listingDataAPI.length > 0 && listingDataAPI != undefined) {
@@ -61,24 +72,25 @@ const Booking = ({navigation}) => {
     }
   }
   const listingData = () => {
-    dispatch(bookingDispatch(navigation,accessToken));
+    dispatch(listingDispatch(navigation,accessToken));
   }
   return (
-    
+   
      <SafeAreaView flex={1}>
      <View
        style={styles.mainContainer}>
        <View style={styles.Header}>
-         <TouchableOpacity  onPress={() => Actions.drawerOpen()}>
+         <TouchableOpacity onPress={() =>  Actions.tabbar()}>
          <Image
-           source={require('../../assets/icon/icon-menu.png')}
+           source={require('../../assets/icon/backnew.png')}
            style={{ width: h(4), height: h(5), tintColor: '#000' }}
            resizeMode="contain"
          />
          </TouchableOpacity>
         
-         <Text style={styles.HeaderTxt}>Booking</Text>
-         <TouchableOpacity></TouchableOpacity>
+         <Text style={styles.HeaderTxt}>Listing</Text>
+         <View>
+         </View>
          {/* <Image source={userPhoto} /> */}
        </View>
 
@@ -219,4 +231,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Booking;
+export default Listing;

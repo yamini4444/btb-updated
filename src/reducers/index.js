@@ -1,10 +1,14 @@
 import { combineReducers } from 'redux';
-import Login from "./Login";
+import LoginReducer from "./LoginReducer";
 import CheckOfflineReducer from './CheckOfflineReducer';
 import SignUpReducer from './SignUpReducer';
+import BookingReducer from './BookingReducer';
+import ListingReducer from './ListingReducer';
 
 export default combineReducers({
-    login: Login,
+    loginReducer: LoginReducer,
     checkOfflineFeature:CheckOfflineReducer,
-    signUpReduscer:SignUpReducer
+    signUpReduscer:SignUpReducer,
+    bookingReducer:BookingReducer,
+    listingReducer:ListingReducer,
 })

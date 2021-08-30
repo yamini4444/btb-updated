@@ -11,6 +11,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Keyboard,
+  SafeAreaView,
   ImageBackground,
   BackHandler,
   ActivityIndicator,
@@ -55,15 +56,50 @@ const Profile = ({ navigation }) => {
 
   // Return Ui For Home Page
   return (
-    <TouchableWithoutFeedback
-      onPress={() => { Keyboard.dismiss(); }}>
-      <View
-        style={styles.mainContainerBox}>
-        <Text>Welcome,{userFullName}</Text>
-
-
+    
+    <SafeAreaView flex={1}>
+    <View
+      style={styles.mainContainer}>
+      <View style={styles.Header}>
+        <TouchableOpacity  onPress={() => Actions.drawerOpen()}>
+        <Image
+          source={require('../../assets/icon/icon-menu.png')}
+          style={{ width: h(4), height: h(5), tintColor: '#000' }}
+          resizeMode="contain"
+        />
+        </TouchableOpacity>
+       
+        <Text style={styles.HeaderTxt}>Profile</Text>
+        <View>
+        </View>
+        {/* <Image source={userPhoto} /> */}
       </View>
-    </TouchableWithoutFeedback>
+
+      <View style={styles.body}>
+        {/* <Text>Welcome,{userFullName}</Text> */}
+        <Text>Welcome,{userFullName}</Text>
+        {/* <View style={styles.searchView}>
+          <TextInput
+            style={{ fontWeight: 'bold', width: '80%' }}
+            autoCapitalize="none"
+            multiline={true}
+            //onFocus={() => onFocusInput()}
+            placeholder="Search"
+          //onChangeText={(text) => searchFunc(text)}
+          // value={search}
+          />
+          <TouchableOpacity>
+            <Image
+              source={require('../../assets/image/searchIcon.png')}
+              style={styles.searchIcon}></Image>
+          </TouchableOpacity>
+        </View> */}
+      </View>
+
+
+
+    </View>
+  </SafeAreaView>
   );
 };
 export default Profile;

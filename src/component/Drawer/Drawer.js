@@ -49,14 +49,14 @@ class DrawerBar extends React.Component {
                   <Text style={styles.drawerText}> Dashboard</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={Actions.Listing}>
                 <View style={styles.drawerView}>
                   <Image
                     style={styles.inputIcon}
                     source={{uri:"https://png.pngtree.com/png-clipart/20191120/original/pngtree-location-icon-png-image_5054141.jpg"}}
                     resizeMode="contain"
                   />
-                  <Text style={styles.drawerText}> Users</Text>
+                  <Text style={styles.drawerText}> Listing</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity>
@@ -66,7 +66,7 @@ class DrawerBar extends React.Component {
                     // source={homeIcon}
                     resizeMode="contain"
                   />
-                  <Text style={styles.drawerText}> Audit Forms</Text>
+                  <Text style={styles.drawerText}> Booking</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity>
@@ -76,7 +76,7 @@ class DrawerBar extends React.Component {
                     // source={homeIcon}
                     resizeMode="contain"
                   />
-                  <Text style={styles.drawerText}> Sites</Text>
+                  <Text style={styles.drawerText}> Messages</Text>
                 </View>
               </TouchableOpacity>
 

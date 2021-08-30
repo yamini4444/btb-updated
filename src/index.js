@@ -19,6 +19,7 @@ import ForgetScreen from './container/ForgetScreen/ForgetScreen';
 import OtpScreen from './container/OtpScreen/OtpScreen';
 import SocialPopup from './container/SignUp/SocialPopup';
 import Booking from './container/Booking/Booking';
+import Listing from './container/Listing/Listing';
 import Messages from './container/Messages/Messages'; 
 import 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
@@ -137,6 +138,13 @@ class Root extends React.Component {
                 wrap={false}
                 key="OtpScreen"
                 title="OtpScreen"
+              />
+              <Scene
+                component={Listing}
+                hideNavBar={true}
+                wrap={false}
+                key="Listing"
+                title="Listing"
               />
               <Drawer
                 hideNavBar

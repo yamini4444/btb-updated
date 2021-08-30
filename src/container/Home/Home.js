@@ -64,11 +64,14 @@ const Home = ({ navigation }) => {
       <View
         style={styles.mainContainer}>
         <View style={styles.Header}>
+          <TouchableOpacity  onPress={() => Actions.drawerOpen()}>
           <Image
             source={require('../../assets/icon/icon-menu.png')}
             style={{ width: h(4), height: h(5), tintColor: '#000' }}
             resizeMode="contain"
           />
+          </TouchableOpacity>
+         
           <Text style={styles.HeaderTxt}>Home</Text>
           <View style={{ backgroundColor: '#fff', borderRadius: 40 / 2, height: 40, width: 40, justifyContent: 'center' }}>
             <Image
@@ -77,7 +80,7 @@ const Home = ({ navigation }) => {
               resizeMode="contain"
             />
           </View>
-          <Image source={userPhoto} />
+          {/* <Image source={userPhoto} /> */}
         </View>
 
         <View style={styles.body}>
@@ -99,11 +102,6 @@ const Home = ({ navigation }) => {
                 style={styles.searchIcon}></Image>
             </TouchableOpacity>
           </View>
-
-          <View>
-
-          </View>
-
         </View>
 
 

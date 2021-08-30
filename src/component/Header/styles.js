@@ -36,4 +36,16 @@ export default StyleSheet.create({
     width: w(40),
     marginRight: w(6),
   },
+
+  Header:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    padding:h(2),
+    backgroundColor:'#ececec'
+  },
+  HeaderTxt:{
+    fontSize:22,
+    textAlign:'center',
+    fontWeight:'bold'
+  },
 });

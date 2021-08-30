@@ -162,7 +162,10 @@ const SignUp = ({ navigation }) => {
       password: password,
       recaptchaToken: recaptcha.recaptcha,
       clientId: 'Btb.App',
-      deviceId: deviceUniqueId
+      deviceId: deviceUniqueId,
+      DeviceName: deviceName,
+      Provider: "dummy",
+      ProviderKey: "dummy"
     }
     console.log('second token',)
     console.log(data)
@@ -326,7 +329,8 @@ const SignUp = ({ navigation }) => {
       provider: socialProvider,
       providerKey: socialUserId,
       deviceId: deviceUniqueId,
-      deviceName: deviceName
+      deviceName: deviceName,
+
     }
     await _captchaRef.refreshToken();
     console.log('second token',)
@@ -465,7 +469,7 @@ const SignUp = ({ navigation }) => {
           {!dataSubmitted ?
             <ReCaptchaV3
               ref={(ref: RecaptchaV3) => _captchaRef = ref}
-              action="signinregister"
+              action="appregister"
               captchaDomain={'https://app.bookbtb.com'}
               siteKey={'6LeudroaAAAAAMqbusMXJqt9HMzUQBgABPcaktCf'}
               onReceiveToken={(token) => {
@@ -487,7 +491,7 @@ const SignUp = ({ navigation }) => {
           <View
             style={styles.socialLogin}>
             <TouchableOpacity
-              onPress={fbLogin}
+              onPress={fbLogin()}
               style={styles.fbView}>
               <Image
                 style={styles.innerTxt}
@@ -495,7 +499,7 @@ const SignUp = ({ navigation }) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={gLogin}
+              onPress={gLogin()}
               style={styles.gmailView}>
               <Image
                 style={styles.innerTxt}
