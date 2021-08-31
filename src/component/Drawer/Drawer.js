@@ -100,7 +100,7 @@ class DrawerBar extends React.Component {
                   <Text style={styles.drawerText}> Reports</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={Actions.Settings}>
                 <View style={styles.drawerView}>
                   <Image
                     style={styles.inputIcon}

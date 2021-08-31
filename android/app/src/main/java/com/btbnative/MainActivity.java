@@ -1,5 +1,5 @@
 package com.btbnative;
-
+import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.facebook.react.ReactActivity;
 import java.util.List;
 import java.util.Arrays;
@@ -20,6 +20,7 @@ public class MainActivity extends ReactActivity {
 
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(new RNDeviceInfo(), // <------ add here
-        new MainReactPackage());
+        new MainReactPackage(),new ReactNativeLocalizationPackage());
+        
   }
 }

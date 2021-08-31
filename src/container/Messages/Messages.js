@@ -43,9 +43,6 @@ const Messages = () => {
 
        
       </View>
-
-
-
     </View>
   </SafeAreaView>
   );

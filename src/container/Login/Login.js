@@ -30,6 +30,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Styles from '../../component/Drawer/Styles';
 const DeviceInfo = require('react-native-device-info');
 import ReCaptchaV3 from '@haskkor/react-native-recaptchav3';
+import {strings} from '../../constants/LocaleString'
 
 let _captchaRef = createRef();
 let checkedServerStatus = true;

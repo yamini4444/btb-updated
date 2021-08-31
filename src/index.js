@@ -21,6 +21,7 @@ import SocialPopup from './container/SignUp/SocialPopup';
 import Booking from './container/Booking/Booking';
 import Listing from './container/Listing/Listing';
 import Messages from './container/Messages/Messages'; 
+import Settings from './container/Settings/Settings';
 import 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
 import Colors from './constants/Colors';
@@ -62,8 +63,7 @@ const TabIcon = ({selected, title, img, focused}) => {
   }
   return (
     <View
-      style={{
-        
+      style={{    
         flex:1,
         flexDirection: 'row',
         backgroundColor: focused ? Colors.appGreyColor : Colors.white,
@@ -146,6 +146,13 @@ class Root extends React.Component {
                 key="Listing"
                 title="Listing"
               />
+              <Scene
+                component={Settings}
+                hideNavBar={true}
+                wrap={false}
+                key="Settings"
+                title="Settings"
+              />
               <Drawer
                 hideNavBar
                 key="drawer"
@@ -204,7 +211,6 @@ class Root extends React.Component {
                   </Scene>
                  </Scene>
               </Drawer>
-
             </Scene>
           </Stack>
         </Scene>

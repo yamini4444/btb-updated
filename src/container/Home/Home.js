@@ -26,7 +26,7 @@ import { IconAsset, Strings, UiColor } from '../../theme';
 import { h, w } from '../../utils/Dimensions';
 import styles from './styles';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import {strings} from '../../constants/LocaleString';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
@@ -64,7 +64,7 @@ const Home = ({ navigation }) => {
       <View
         style={styles.mainContainer}>
         <View style={styles.Header}>
-          <TouchableOpacity  onPress={() => Actions.drawerOpen()}>
+          <TouchableOpacity onPress={() => Actions.drawerOpen()}>
           <Image
             source={require('../../assets/icon/icon-menu.png')}
             style={{ width: h(4), height: h(5), tintColor: '#000' }}
@@ -72,7 +72,7 @@ const Home = ({ navigation }) => {
           />
           </TouchableOpacity>
          
-          <Text style={styles.HeaderTxt}>Home</Text>
+          <Text style={styles.HeaderTxt}>{strings.Home}</Text>
           <View style={{ backgroundColor: '#fff', borderRadius: 40 / 2, height: 40, width: 40, justifyContent: 'center' }}>
             <Image
               source={ userPhoto ? userPhoto: require('../../assets/icon/person.png')}
@@ -103,9 +103,6 @@ const Home = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-
-
-
       </View>
     </SafeAreaView>
   );

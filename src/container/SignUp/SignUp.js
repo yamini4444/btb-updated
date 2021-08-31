@@ -491,7 +491,7 @@ const SignUp = ({ navigation }) => {
           <View
             style={styles.socialLogin}>
             <TouchableOpacity
-              onPress={fbLogin()}
+              onPress={()=>fbLogin()}
               style={styles.fbView}>
               <Image
                 style={styles.innerTxt}
@@ -499,7 +499,7 @@ const SignUp = ({ navigation }) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={gLogin()}
+              onPress={()=>gLogin()}
               style={styles.gmailView}>
               <Image
                 style={styles.innerTxt}

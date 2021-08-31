@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 export function bookingDispatch(navigation, TOKEN) {
     console.log(TOKEN)
     return (dispatch) => {
-        //fetch(BaseUrl + `api/v1/Auth/register`, {
+        
         fetch(BaseUrl + `api/v1/Listing`, {
             method: 'GET',
             headers: {
