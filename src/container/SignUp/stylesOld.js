@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { h, w } from '../../utils/Dimensions';
+import { back } from 'react-native/Libraries/Animated/Easing';
+import { h, height, w } from '../../utils/Dimensions';
 
 export default StyleSheet.create({
   mainContainerBox:{
@@ -11,65 +12,26 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff'
   },
-  backIcon:{
-    margin:h(2),
-    height:40,
-    width:40
-},
-  txt: {   
-    marginHorizontal:h(4),
-    textAlign: 'left',
-    fontSize: 24,
+  txt: {
+    alignSelf: 'center',
+    fontSize: 18,
     fontWeight: 'bold',
-    top: h(5),
-    color: '#000'
+    // marginTop:10,
+    position:'absolute',
+    color: '#383B3F'
   },
-  txt1: {
-    marginHorizontal:h(4),
-    textAlign:'left',
-    fontSize: 14,
-    top: h(6),
-    color: '#000'
-  },
-  txtDob: {   
-    alignSelf: 'center',
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: h(5),
-    color: '#000'
-  },
-  txt1Dob: {
-    paddingHorizontal:h(10),
-   textAlign:'center',
-    alignSelf: 'center',
-    fontSize: 12,
-    marginTop:h(2),
-    marginBottom:h(5),
-    color: '#A4A4A4'
-  },
-  txtResend:{
-    paddingHorizontal:h(10),
-   textAlign:'center',
-    alignSelf: 'center',
-    fontSize: 12,
-    color: '#A4A4A4'
-  },
-
   Otpcontainer: {
   },
   passwordBox:{
     flexDirection: 'row',
     alignSelf: 'center',
-    fontSize: 10,
-    fontWeight:'bold',
-     borderColor: '#F2F2F2',
+    borderColor: '#000',
     borderWidth: w(0.28),
     width: w(75),
-    height: h(7),
-    borderRadius:10,
-    justifyContent:'space-between',
-
-    padding: w(5),
+    height: h(5),
+    borderRadius: w(10),
+    marginTop: h(1),
+    paddingLeft: w(5),
   },
   touchPassword:{
     alignItems: 'center', 
@@ -80,36 +42,41 @@ export default StyleSheet.create({
     height: 20, 
     width: 20
   },
-  inputHead:{
-    textAlign: 'left',
-    fontSize: 10,
-    color: '#828282',
-    paddingHorizontal:h(6.5),
-    marginBottom:h(1)  
-    
-  },
   inputFieldContainer: {
-    justifyContent:'center',
     alignSelf: 'center',
-    fontSize: 10,
-    fontWeight:'bold',
-     borderColor: '#F2F2F2',
+    fontSize: 14,
+    borderColor:'#000',
+    marginVertical:h(1),
+    // borderColor: '#000',
     borderWidth: w(0.28),
     width: w(75),
-    height: h(7),
-    borderRadius:10,
-    marginBottom:h(3),
-    padding: w(5),
-
+    height: h(5),
+    borderRadius: w(10),
+    // top: h(21),
+    paddingLeft: w(5)
+  },
+  inputFieldContainerSocial: {
+    alignSelf: 'center',
+    fontSize: 14,
+    borderColor:'#000',
+    marginTop:50,
+    // borderColor: '#000',
+    borderWidth: w(0.28),
+    width: w(75),
+    height: h(5),
+    borderRadius: w(10),
+    // top: h(21),
+    paddingLeft: w(5)
   },
   inputFieldContainer2: {
-     alignSelf: 'center',
+    // alignSelf: 'center',
     // borderColor: '#000',
     // borderWidth: w(0.28),
-    fontSize: 10,
+    fontSize: 14,
     width: w(60),
     height: h(5),
     borderRadius: w(10),
+    
   },
   passimage: {
     top: h(31),
@@ -118,54 +85,47 @@ export default StyleSheet.create({
   },
   rememberView:{
     flexDirection: 'row',
-    marginTop: h(4),
-    alignSelf: 'flex-start',
-    marginHorizontal:h(6.5)
+    marginTop: h(1),
+    alignSelf: 'center',
   },
   showRemember:{
-    height: 12,
-    width: 12,
-    color:'#25B5A4',
-    
-    tintColor:'#25B5A4',
+    height: 18,
+    width: 18,
     justifyContent: 'center',
     alignItems: 'center',
     top: h(0.2),
   },
   notShowRemember:{
-    height: 14, 
-    width: 14, 
+    height: 12, 
+    width: 12, 
     resizeMode: 'contain',
-    tintColor:'#fff',
-    backgroundColor:'#25B5A4',
-    
+    tintColor:'#0000ff'
   },
   rememberTxt:{
-    color: '#000',
-    marginLeft: w(4),
+    color: '#8c8c8c',
+    marginLeft: w(2),
     fontSize: 12,
-    fontWeight:'bold',
-  
+    marginTop: h(0.3),
   },
   forgotButton: {
-    color: '#25B5A4', 
+    color: '#8c8c8c', 
     fontSize: 12,
-    marginLeft: w(16),
-    fontWeight:'bold',
+    marginLeft: w(11),
+    marginTop: h(0.3)
   },
   buttonContainer: {
     alignSelf: 'center',
-    backgroundColor: '#25B5A4',
+    backgroundColor: '#0000ff',
     width: w(75),
-    height: h(7),
-    borderRadius:10,
-    top: h(5),
+    height: h(5),
+    borderRadius: w(10),
+    top: h(7),
     justifyContent: 'center',
     alignItems: 'center'
   },
   AndText: {
-    fontSize: 14,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '500',
     // alignSelf: 'center',
     color: '#fff',
     // marginTop: h(1.2),
@@ -174,7 +134,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'center',
     justifyContent: 'center',
-
   },
   
   socialButton: {
@@ -190,32 +149,24 @@ export default StyleSheet.create({
   fbView:{
     height: h(6) ,
     width: h(6),
-    borderRadius: 15,
-    borderColor:'#f2f2f2',
-    borderWidth:1,
+    borderRadius: h(6)/2,
+    backgroundColor: '#000099',
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: w(5),
-    zIndex: 999, // works on ios
-    elevation: 999, // works on android
   },
   gmailView:{
     height: h(6),
     width: h(6),
-    borderRadius: 15,
-    borderColor:'#f2f2f2',
-    borderWidth:1,
+    borderRadius: h(6)/2,
+    backgroundColor: '#ff5050',
     alignItems: 'center',
-    justifyContent: 'center', 
-    zIndex: 999, // works on ios
-    elevation: 999, // works on android
-    
+    justifyContent: 'center',
+    marginLeft: w(5),
   },
   innerTxt:{
     width: h(2.8),
     height: h(2.8),
     resizeMode: 'contain',
-    // tintColor:'red'
   },
   signUpView:{
     alignSelf: 'center',
@@ -234,7 +185,7 @@ export default StyleSheet.create({
     borderRadius: w(10),
   },
   modelView: {
-    backgroundColor: '#000',
+    backgroundColor: 'green',
     alignSelf: 'center',
     height: h(36),
     width: w(83),
@@ -242,6 +193,7 @@ export default StyleSheet.create({
     borderRadius: w(10),
     justifyContent: 'center',
     alignItems: 'center',
+    opacity: 0.5
   },
   modelTxT: {
     color: '#fff',
@@ -272,13 +224,49 @@ export default StyleSheet.create({
   txtJoined: {
     color: '#fa8072',
   },
-  otpInput: {
-    height: h(7),
-    width: w(13),
-    borderRadius: 10,
-    backgroundColor: '#F5F5F5',
-    marginTop: h(2),
-    textAlign: 'center',
-    alignSelf: 'center'
+  centeredView: {
+   
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical:180,
+    // marginLeft:20,
+    height:380,
+    width:45,
+    alignSelf:"center"
 },
+modalView: {
+    // margin: 100,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+        width: 0,
+        height: 2
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5
+},
+button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+},
+buttonOpen: {
+    backgroundColor: "#F194FF",
+},
+buttonClose: {
+    backgroundColor: "#2196F3",
+},
+textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+},
+modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+}
 })

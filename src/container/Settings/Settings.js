@@ -10,21 +10,22 @@ import {
     Modal
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import {changeLaguage} from '../../constants/LocaleString';
+import {changeLanguage, getMockLanguages} from '../../constants/LocaleString';
 import { h, w } from '../../utils/Dimensions';
 import ModalDropdown from 'react-native-modal-dropdown';
 import ModalSelector from 'react-native-modal-selector'
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
-const Option = [{ "key": "en_us", "label": 'English-US' }, { "key": "en_uk", "label": 'English-Uk' }, { "key": "it", "label": 'Italian' }];
-
 const Settings = ({ navigation }) => {
 
     const [option, setOption] = useState('');
     useEffect(() => {
+      let options = getMockLanguages().then((response) => {
+        setOption(response)
+      })
        
-      }, [changeLaguage]);
+      }, [changeLanguage]);
     return (
         <SafeAreaView flex={1}>
             <View
@@ -113,9 +114,8 @@ const Settings = ({ navigation }) => {
                         <ModalSelector
                             data={Option}
                             initValue="Select Language"
-                            onChange={async(option) => { await changeLaguage(option.key)}} />
+                            onChange={(option) => {changeLanguage(option.key)}} />
                              {/* onChange={async(option) => { alert(`${option.label} (${option.key}) nom nom nom`) }} /> */}
-
                     </TouchableOpacity>
                 </View>
             </View>

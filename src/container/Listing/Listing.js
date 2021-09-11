@@ -1,36 +1,41 @@
 import React, { useState, useEffect, createRef, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList,SafeAreaView,TouchableOpacity,Image,TextInput,BackHandler, } from 'react-native';
+import { View, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity, Image, TextInput, BackHandler, Switch } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { w, h } from '../../utils/Dimensions';
-import {listingDispatch} from '../../actions/ListingAction';
+import { listingDispatch, singleListingDispatch,listingPublishDispatch } from '../../actions/ListingAction';
 import { Actions } from 'react-native-router-flux';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const Listing = ({navigation}) => {
+const Listing = ({ navigation }) => {
   const dispatch = useDispatch();
-  const[accessToken,setAccessToken] = useState(null);
-  const[roomsListing,setRoomsListing] = useState(null);
-  const listingDataAPI = useSelector((state) => state.bookingReducer.BookingRes);
-  console.log('listingDataAPI',listingDataAPI);
+  const [accessToken, setAccessToken] = useState(null);
+  const [roomsListing, setRoomsListing] = useState(null);
+  const [listingId, setListingId] = useState(null);
+  const [listingPublishId,setListingPublishId] = useState(null);
+  const listingDataAPI = useSelector((state) => state.listingReducer.ListingRes);
+  const [isEnabled, setIsEnabled] = useState(false);
  
+
+
   useEffect(async () => {
     await readData();
     listingData();
-  }, [accessToken])
+  }, [accessToken, listingId,listingPublishId])
 
   useEffect(() => {
-    if (listingDataAPI && listingDataAPI.length > 0 && listingDataAPI != undefined) {
+    if (listingDataAPI && (listingDataAPI != undefined)) {
       let temp = [];
-      for (let item of listingDataAPI) {      
-      //   console.log("item", item)
-      //   console.log("room", item.rooms)
-      //   let data = item.rooms
-      //   console.log("data",data);
-      //  for(let dataArray of data){
-      //    console.log("dataArray",dataArray)
-      //  }
-      temp.push(item);
-      setRoomsListing(temp)
+      for (let item of listingDataAPI) {
+        //   console.log("item", item)
+        //   console.log("room", item.rooms)
+        //   let data = item.rooms
+        //   console.log("data",data);
+        //  for(let dataArray of data){
+        //    console.log("dataArray",dataArray)
+        //  }
+        temp.push(item);
+        setRoomsListing(temp);
+        console.log('room listing', roomsListing)
       }
     }
   }, [listingDataAPI]);
@@ -63,76 +68,88 @@ const Listing = ({navigation}) => {
   const readData = async () => {
     try {
       const userToken = await AsyncStorage.getItem('accessToken')
-      console.log(userToken);
       if (userToken !== null)
         setAccessToken(userToken)
-      console.log(accessToken) 	
     } catch (e) {
       alert('Failed to fetch the data from storage')
     }
   }
   const listingData = () => {
-    dispatch(listingDispatch(navigation,accessToken));
+    dispatch(listingDispatch(navigation, accessToken));
   }
+
+  const singleListingApiCall = (listingId) => {
+    setListingId(listingId);
+    dispatch(singleListingDispatch(navigation, accessToken, listingId))
+  }
+
+  const toggleSwitch = (listingPublishId) =>{
+    setIsEnabled(previousState => !previousState);
+    setListingPublishId(listingPublishId);
+    dispatch(listingPublishDispatch(navigation, accessToken, listingPublishId))
+    
+  } 
+
+
+
   return (
-   
-     <SafeAreaView flex={1}>
-     <View
-       style={styles.mainContainer}>
-       <View style={styles.Header}>
-         <TouchableOpacity onPress={() =>  Actions.tabbar()}>
-         <Image
-           source={require('../../assets/icon/backnew.png')}
-           style={{ width: h(4), height: h(5), tintColor: '#000' }}
-           resizeMode="contain"
-         />
-         </TouchableOpacity>
-        
-         <Text style={styles.HeaderTxt}>Listing</Text>
-         <View>
-         </View>
-         {/* <Image source={userPhoto} /> */}
-       </View>
 
-       <View style={styles.body}>
-         {/* <Text>Welcome,{userFullName}</Text> */}
+    <SafeAreaView flex={1}>
+      <View
+        style={styles.mainContainer}>
+        <View style={styles.Header}>
+          <TouchableOpacity onPress={() => Actions.tabbar()}>
+            <Image
+              source={require('../../assets/icon/backnew.png')}
+              style={{ width: h(4), height: h(5), tintColor: '#000' }}
+              resizeMode="contain" />
+          </TouchableOpacity>
+          <Text style={styles.HeaderTxt}>Listing</Text>
+          <View>
+          </View>
+        </View>
 
-         <View style={styles.searchView}>
-           <TextInput
-             style={{ fontWeight: 'bold', width: '80%' }}
-             autoCapitalize="none"
-             multiline={true}
-             //onFocus={() => onFocusInput()}
-             placeholder="Search"
-           //onChangeText={(text) => searchFunc(text)}
-           // value={search}
-           />
-           <TouchableOpacity>
-             <Image
-               source={require('../../assets/image/searchIcon.png')}
-               style={styles.searchIcon}></Image>
-           </TouchableOpacity>
-         </View>
-         <FlatList
-          style={{marginTop:h(4)}}
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-          data={roomsListing}
-          keyExtractor={(item) => item.id}
-          // ItemSeparatorComponent={() => <Separator />}
-          renderItem={({ item, index }) => (
-            <View style={styles.mainView}>
-              <Text>{item.id}</Text>
-              <Text>{item.name}</Text>
-            </View>
-          )}
-        />
-       </View>
-
-
-
-     </View>
-   </SafeAreaView>
+        <View style={styles.body}>
+          <View style={styles.searchView}>
+            <TextInput
+              style={{ fontWeight: 'bold', width: '80%' }}
+              autoCapitalize="none"
+              multiline={true}
+              //onFocus={() => onFocusInput()}
+              placeholder="Search"
+            //onChangeText={(text) => searchFunc(text)}
+            // value={search}
+            />
+            <TouchableOpacity>
+              <Image
+                source={require('../../assets/image/searchIcon.png')}
+                style={styles.searchIcon}></Image>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            style={{ marginTop: h(4) }}
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+            data={roomsListing}
+            keyExtractor={(item) => item.id}
+            // ItemSeparatorComponent={() => <Separator />}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity onPress={() => singleListingApiCall(item.id)} style={styles.mainView}>
+                <Text>{item.id}</Text>
+                <Text>{item.name}</Text>
+                <Switch
+                  trackColor={{ false: "#767577", true: "#81b0ff" }}
+                  thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={()=>toggleSwitch(item.id)}
+                  value={isEnabled}
+                />
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -170,19 +187,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  Header:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-    padding:h(2),
-    backgroundColor:'#ececec'
+  Header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: h(2),
+    backgroundColor: '#ececec'
   },
-  HeaderTxt:{
-    fontSize:22,
-    textAlign:'center',
-    fontWeight:'bold'
+  HeaderTxt: {
+    fontSize: 22,
+    textAlign: 'center',
+    fontWeight: 'bold'
   },
-  body:{
-    margin:h(2)
+  body: {
+    margin: h(2)
   },
   searchView: {
     height: 40,
@@ -194,7 +211,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    
+
   },
   searchText: {
     alignSelf: 'center',

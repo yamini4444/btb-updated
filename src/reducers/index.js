@@ -4,6 +4,7 @@ import CheckOfflineReducer from './CheckOfflineReducer';
 import SignUpReducer from './SignUpReducer';
 import BookingReducer from './BookingReducer';
 import ListingReducer from './ListingReducer';
+import MessageReducer from './MessageReducer';
 
 export default combineReducers({
     loginReducer: LoginReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
     signUpReduscer:SignUpReducer,
     bookingReducer:BookingReducer,
     listingReducer:ListingReducer,
+    messageReducer:MessageReducer,
 })

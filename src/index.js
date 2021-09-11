@@ -10,8 +10,13 @@ import {
 } from 'react-native';
 import DrawerBar from './component/Drawer/Drawer';
 import SignUp from './container/SignUp/SignUp';
+import DobScreen from './container/SignUp/DobScreen';
+import PhoneNumberScreen from './container/SignUp/PhoneNumberScreen';
+import OtpAuth from './container/SignUp/OtpAuth';
 import Login from './container/Login/Login';
 import Splash from './container/Splash/Splash';
+import Language from './container/Language/Language';
+import AppIntro from './container/AppIntro/AppIntro';
 import Home from './container/Home/Home';
 import Profile from './container/Profile/Profile';
 import StaffLogin from './container/StaffLogin/StaffLogin';
@@ -20,18 +25,23 @@ import OtpScreen from './container/OtpScreen/OtpScreen';
 import SocialPopup from './container/SignUp/SocialPopup';
 import Booking from './container/Booking/Booking';
 import Listing from './container/Listing/Listing';
-import Messages from './container/Messages/Messages'; 
+import Messages from './container/Messages/Messages';
+import ConversationScreen from './container/ConversationScreen/ConversationScreen';
 import Settings from './container/Settings/Settings';
+import SingleBooking from './container/SingleBooking/SingleBooking';
+import SingleListing from './container/SingleListing/SingleListing';
+import ResetPassword from './container/ResetPassword/ResetPassword';
+import ResetEmailScreen from './container/ResetEmailScreen/ResetEmailScreen';
 import 'react-native-gesture-handler';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Colors from './constants/Colors';
-import {w, h} from './utils/Dimensions';
+import { w, h } from './utils/Dimensions';
 import { connect } from "react-redux";
 
 var width = Dimensions.get('window').width;
 var image;
 var tintcolor;
-const TabIcon = ({selected, title, img, focused}) => {
+const TabIcon = ({ selected, title, img, focused }) => {
   const reduxState = useSelector((state) => state);
   switch (title) {
     case 'Home':
@@ -39,7 +49,7 @@ const TabIcon = ({selected, title, img, focused}) => {
         ? require('./assets/icon/homeIcon.png')
         : require('./assets/icon/homeIcon.png');
       tintcolor = focused ? '#df396b' : '#C86CE6';
-      break;  
+      break;
 
     case 'Profile':
       image = focused
@@ -47,24 +57,24 @@ const TabIcon = ({selected, title, img, focused}) => {
         : require('./assets/icon/homeIcon.png');
       tintcolor = focused ? '#df396b' : '#C86CE6';
       break;
-      case 'Booking':
-        image = focused
-          ? require('./assets/icon/homeIcon.png')
-          : require('./assets/icon/homeIcon.png');
-        tintcolor = focused ? '#df396b' : '#C86CE6';
-        break;  
-  
-      case 'Messages':
-        image = focused
-          ? require('./assets/icon/homeIcon.png')
-          : require('./assets/icon/homeIcon.png');
-        tintcolor = focused ? '#df396b' : '#C86CE6';
-        break;
+    case 'Booking':
+      image = focused
+        ? require('./assets/icon/homeIcon.png')
+        : require('./assets/icon/homeIcon.png');
+      tintcolor = focused ? '#df396b' : '#C86CE6';
+      break;
+
+    case 'Messages':
+      image = focused
+        ? require('./assets/icon/homeIcon.png')
+        : require('./assets/icon/homeIcon.png');
+      tintcolor = focused ? '#df396b' : '#C86CE6';
+      break;
   }
   return (
     <View
-      style={{    
-        flex:1,
+      style={{
+        flex: 1,
         flexDirection: 'row',
         backgroundColor: focused ? Colors.appGreyColor : Colors.white,
         paddingHorizontal: h(1.5),
@@ -74,12 +84,12 @@ const TabIcon = ({selected, title, img, focused}) => {
       }}>
       <Image
         source={image}
-        style={{width: h(3), height: h(3), tintColor: tintcolor}}
+        style={{ width: h(3), height: h(3), tintColor: tintcolor }}
         resizeMode="contain"
       />
       {focused ? (
         <Text
-          style={{fontWeight: 'bold', color: Colors.footerText, marginLeft: 3}}>
+          style={{ fontWeight: 'bold', color: Colors.footerText, marginLeft: 3 }}>
           {title}
         </Text>
       ) : null}
@@ -98,11 +108,39 @@ class Root extends React.Component {
           <Stack key="app">
             <Scene hideNavBar panHandlers={null}>
               <Scene
-                initial={true}
+
                 component={Splash}
                 hideNavBar={true}
                 key="Splash"
                 title="Splash"
+              />
+              <Scene
+                component={Language}
+                hideNavBar={true}
+                key="Language"
+                wrap={false}
+                title="Language"
+              />
+              <Scene
+                component={AppIntro}
+                hideNavBar={true}
+                key="AppIntro"
+                wrap={false}
+                title="AppIntro"
+              />
+              <Scene
+                component={ResetEmailScreen}
+                hideNavBar={true}
+                key="ResetEmailScreen"
+                wrap={false}
+                title="ResetEmailScreen"
+              />
+              <Scene
+                component={ResetPassword}
+                hideNavBar={true}
+                key="ResetPassword"
+                wrap={false}
+                title="ResetPassword"
               />
               <Scene
                 component={Login}
@@ -112,6 +150,7 @@ class Root extends React.Component {
                 title="Login"
               />
               <Scene
+                initial={true}
                 component={SignUp}
                 hideNavBar={true}
                 wrap={false}
@@ -119,13 +158,34 @@ class Root extends React.Component {
                 title="SignUp"
               />
                <Scene
+                component={DobScreen}
+                hideNavBar={true}
+                wrap={false}
+                key="DobScreen"
+                title="DobScreen"
+              />
+               <Scene
+                component={PhoneNumberScreen}
+                hideNavBar={true}
+                wrap={false}
+                key="PhoneNumberScreen"
+                title="PhoneNumberScreen"
+              />
+               <Scene
+                component={OtpAuth}
+                hideNavBar={true}
+                wrap={false}
+                key="OtpAuth"
+                title="OtpAuth"
+              /> 
+              <Scene
                 component={SocialPopup}
                 hideNavBar={true}
                 wrap={false}
                 key="SocialPopup"
                 title="SocialPopup"
               />
-               <Scene
+              <Scene
                 component={ForgetScreen}
                 hideNavBar={true}
                 wrap={false}
@@ -153,6 +213,28 @@ class Root extends React.Component {
                 key="Settings"
                 title="Settings"
               />
+              <Scene
+                component={SingleBooking}
+                hideNavBar={true}
+                wrap={false}
+                key="SingleBooking"
+                title="SingleBooking"
+              />
+              <Scene
+                component={SingleListing}
+                hideNavBar={true}
+                wrap={false}
+                key="SingleListing"
+                title="SingleListing"
+              />
+              <Scene
+                component={ConversationScreen}
+                hideNavBar={true}
+                key="ConversationScreen"
+                title="ConversationScreen"
+                wrap={false}>
+              </Scene>
+
               <Drawer
                 hideNavBar
                 key="drawer"
@@ -207,9 +289,11 @@ class Root extends React.Component {
                       hideNavBar={true}
                       key="Messages"
                       title="Messages"
-                      wrap={false}></Scene>
+                      wrap={false}>
+
+                    </Scene>
                   </Scene>
-                 </Scene>
+                </Scene>
               </Drawer>
             </Scene>
           </Stack>

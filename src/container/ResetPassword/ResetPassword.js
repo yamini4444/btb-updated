@@ -37,7 +37,7 @@ let checkedServerStatus = true;
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 
-const ForgetScreen = ({ navigation }) => {
+const ResetPassword = ({ navigation }) => {
   const screenStatus = navigation.isFocused();
   const [email, setEmail] = useState('');
 
@@ -48,55 +48,51 @@ const ForgetScreen = ({ navigation }) => {
       <KeyboardAvoidingView
         style={{ flex: 1, backgroundColor: '#fff' }}
         behavior={Platform.OS === 'ios' ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? -270 : -210}
-      >
-
+        keyboardVerticalOffset={Platform.OS === 'ios' ? -270 : -210} >
         <View
           style={styles.mainContainerBox}>
           <StatusBar backgroundColor="#fff"></StatusBar>
-          <View flex={1.3}>
+          <View flex={1} >
+            <TouchableOpacity onPress={Actions.ResetEmailScreen} >
+              <Image
+                style={styles.backIcon}
+                source={require('../../assets/image/backImage.png')}/>
+            </TouchableOpacity>
             <Text numberOfLines={1} adjustsFontSizeToFit style={styles.txt}>
-            Forgot Pass?
+              Reset your password
             </Text>
-            <Text  style={styles.txt1}>
-              Enter your email adress to reset your
-              password instruction.
+            <Text style={styles.txt1}>
+              At least 8 characters, with uppercase and lowercase letters
             </Text>
-          </View>
-
-          <View flex={2} >
-            <Text style={styles.inputHead}>Email Address</Text>
+            <Text style={styles.inputHead}>New Password</Text>
             <TextInput
               style={styles.inputFieldContainer}
               placeholderTextColor="#383B3F"
               underlineColorAndroid="transparent"
-              placeholder="Enter Email"
+              placeholder="Enter Password"
               autoCapitalize="none"
               underlineColorAndroid="transparent"
               onChangeText={(email) => setEmail(email)}
-              value={email}
-            />
-
+              value={email}/>
+            <Text style={styles.inputHead}>Confirm Password</Text>
+            <TextInput
+              style={styles.inputFieldContainer}
+              placeholderTextColor="#383B3F"
+              underlineColorAndroid="transparent"
+              placeholder="Enter Confirm Password"
+              autoCapitalize="none"
+              underlineColorAndroid="transparent"
+              onChangeText={(email) => setEmail(email)}
+              value={email} />
             <TouchableOpacity
               onPress={Actions.ResetEmailScreen}
               style={styles.buttonContainer}>
-              <Text style={styles.AndText}>Reset Password</Text>
+              <Text style={styles.AndText}>Confirm</Text>
             </TouchableOpacity>
-
-            <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: h(5) }}>
-              <Text style={{ fontSize: 12 }}>Remember Password?</Text>
-              <TouchableOpacity onPress={Actions.Login}>
-                <Text style={{ fontSize: 12, color: '#25B5A4', marginLeft: h(0.5) }}>Log In!</Text></TouchableOpacity>
-            </View>
-
-          </View>
-          <View flex={1} >
-
-
           </View>
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 };
-export default ForgetScreen;
+export default ResetPassword;

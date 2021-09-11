@@ -26,21 +26,21 @@ import { IconAsset, Strings, UiColor } from '../../theme';
 import { h, w } from '../../utils/Dimensions';
 import styles from './styles';
 import AsyncStorage from '@react-native-community/async-storage';
-import {strings} from '../../constants/LocaleString';
+import {strings,getMockLanguages} from '../../constants/LocaleString';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 
 const Home = ({ navigation }) => {
-  console.log(navigation)
+  console.log('navigation',navigation)
+  console.log('get language from hone',strings.getAvailableLanguages(),getMockLanguages()  ,strings.getLanguage())
   const screenStatus = navigation.isFocused();
   const [userFullName, setUserFullName] = useState(null)
   const [userPhoto, setUserPhoto] = useState(null)
 
   useEffect(() => {
     readData()
-  }, [])
-
+  }, [strings])
 
   const readData = async () => {
     try {

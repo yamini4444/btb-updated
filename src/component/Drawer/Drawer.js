@@ -21,7 +21,9 @@ class DrawerBar extends React.Component {
     }
   }
 
-  componentWillMount() { }
+  componentWillMount() { 
+    const {navigation} = this.props
+  }
 
   goMainHome = () => {
     this.toggleDrawer();
@@ -39,7 +41,7 @@ class DrawerBar extends React.Component {
         <View style={styles.mainContainer}>
           <ScrollView>
             <View>
-              <TouchableOpacity onPress={Actions.drawerToggle}>
+              <TouchableOpacity onPress={Actions.Home}>
                 <View style={styles.drawerView}>
                   <Image
                     style={styles.inputIcon}

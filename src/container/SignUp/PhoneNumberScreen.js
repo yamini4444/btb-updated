@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, createRef } from 'react';
 import { LoginButton, AccessToken, LoginManager, Profile } from 'react-native-fbsdk-next';
 import {
@@ -25,6 +26,7 @@ import { withNavigationFocus } from 'react-navigation';
 import { Actions } from 'react-native-router-flux';
 import { IconAsset, Strings, UiColor } from '../../theme';
 import { h, w } from '../../utils/Dimensions';
+import DatePicker from 'react-native-datepicker';
 import styles from './styles';
 import { connect } from 'react-redux';
 import { loginDisptach, loginSocialDisptach } from '../../actions/LoginAction';
@@ -40,7 +42,7 @@ let checkedServerStatus = true;
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 
-const Login = ({ navigation }) => {
+const PhoneNumberScreen = ({ navigation }) => {
   const [recaptcha, setRecaptcha] = useState('');
   const [dataValidated, setDataValidated] = useState(false);
   const [dataSubmitted, setDataSubmitted] = useState(false);
@@ -52,6 +54,7 @@ const Login = ({ navigation }) => {
   const [shareVisible, shareSetVisible] = useState(false);
   const [email, setEmail] = useState('dev_host_lb@yopmail.com');
   const [password, setPassword] = useState('Asf-2020');
+  const [dob, setDob] = useState('');
   const [hidePassword, sethidePassword] = useState(true);
   const [uiRender, setuiRender] = useState(false);
   const [showButton, setshowButton] = useState(false);
@@ -317,94 +320,30 @@ const Login = ({ navigation }) => {
       <View
         style={styles.mainContainerBox}>
           <StatusBar backgroundColor="#fff"></StatusBar>
-        <View flex={1.3}>
-          <Text numberOfLines={1} adjustsFontSizeToFit style={styles.txt}>
-            {strings.login.titleHead1}
-          </Text>
-          <Text numberOfLines={1} adjustsFontSizeToFit style={styles.txt1}>
-            {strings.login.titleHead2}
-          </Text>
-        </View>
-
-        <View flex={4} >
-          <Text style={styles.inputHead}>{strings.login.email}</Text>
-          <TextInput
-            style={styles.inputFieldContainer}
-            placeholderTextColor="#383B3F"
-            underlineColorAndroid="transparent"
-            placeholder={strings.login.emailPlaceholder}
-            autoCapitalize="none"
-            underlineColorAndroid="transparent"
-            onChangeText={(email) => setEmail(email)}
-            value={email}
-          />
-
-          <Text style={styles.inputHead}>{strings.login.password}</Text>
-          <View
-            style={styles.passwordBox}>
+        <View flex={1} >
+            <TouchableOpacity onPress={Actions.SignUp} >
+              <Image
+                style={styles.backIcon}
+                source={require('../../assets/image/backImage.png')}/>
+            </TouchableOpacity>
+            <Text numberOfLines={1} adjustsFontSizeToFit style={styles.txtDob}>
+            {strings.phoneNumber.titleHead1}
+            </Text>
+            <Text style={styles.txt1Dob}>
+            {strings.phoneNumber.titleHead2}
+            </Text>
+            <Text style={styles.inputHead}>{strings.phoneNumber.phone}</Text>
             <TextInput
-              style={styles.inputFieldContainer2}
+              style={styles.inputFieldContainer}
               placeholderTextColor="#383B3F"
               underlineColorAndroid="transparent"
-              placeholder={strings.login.passwordPlaceholder}
+              placeholder={strings.dobScreen.namePlaceholder}
               autoCapitalize="none"
               underlineColorAndroid="transparent"
-              secureTextEntry={!showPassword}
-              onChangeText={(password) => setPassword(password)}
-              value={password}
-            />
-
-            <TouchableOpacity
-              style={styles.touchPassword}
-              // onPress={PasswordVisibility}
-              onPress={() => setShowPassword(!showPassword)}>
-              {!showPassword ? (
-                <Image
-                  source={require('../../assets/icon/password-hide.png')}
-                  style={styles.EyeImage}
-                />
-              ) : (
-                <Image
-                  source={require('../../assets/icon/eye.png')}
-                  style={styles.EyeImage}
-                />
-              )}
-            </TouchableOpacity>
-          </View>
-
-          <View
-            style={styles.rememberView}>
-            <TouchableOpacity
-             
-             onPress={() => colorChange()}>
-              {/* <ImageBackground
-                source={require('../../assets/icon/unchecked.png')}
-                style={styles.showRemember}> */}
-                {showButton ? 
-                  <Image
-                    source={require('../../assets/icon/checked.png')}
-                    style={styles.notShowRemember}
-                  />
-                 : 
-                <View style={{ borderWidth: 1, height: 12, width: 12, marginTop: 2, borderColor: '#25B5A4', }} >
-                  </View>}
-              {/* </ImageBackground> */}
-
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => colorChange()}>
-              <Text
-                style={styles.rememberTxt}>
-                {strings.login.rememberMe}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => callToAction('ForgetScreen')}>
-              <Text style={styles.forgotButton}>
-                {strings.login.forgotPassword}
-              </Text>
-            </TouchableOpacity>
-            {!dataSubmitted ?
+              onChangeText={(email) => setEmail(email)}
+              value={email}/>
+           
+               {/* {!dataSubmitted ?
               <ReCaptchaV3
                 ref={(ref: RecaptchaV3) => _captchaRef = ref}
                 action="applogin"
@@ -417,56 +356,17 @@ const Login = ({ navigation }) => {
                 }}
               />
               : <View>{console.log('No captcha zone')}</View>
-            }
-          </View>
-
-          <TouchableOpacity
-            onPress={() => ValidationFunction()}
-            style={styles.buttonContainer}>
-            <Text style={styles.AndText}>{strings.login.login}</Text>
-          </TouchableOpacity>
-
-          <View style={{flexDirection:'row',alignSelf:'center',marginTop:h(10)}}>
-            <Text style={{fontSize:12}}>{strings.login.dontHaveAccount}</Text>
-            <TouchableOpacity onPress={() => callToAction('SignUp')}>
-              <Text style={{fontSize:12,color:'#25B5A4',marginLeft:h(0.5)}}>{strings.login.signUp}</Text></TouchableOpacity>
-          </View>
-
-          <Text style={{fontSize:20,textAlign:'center',marginTop:h(12),color:'#BDBDBD'}}>{strings.login.or}</Text>
-        </View>
-        <View flex={1} >
-          <Text style={{textAlign:'center',fontSize:12,marginBottom:h(2)}}>{strings.login.signInWith}:</Text>
-          <View
-            style={styles.socialLogin}>
-           
+            } */}
             <TouchableOpacity
-              onPress={() => gLogin()}
-              style={styles.gmailView}>
-              <Image
-                style={styles.innerTxt}
-                source={require('../../assets/image/google.png')}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => fbLogin()}
-              style={styles.fbView}
-              >
-              <Image
-                style={styles.innerTxt}
-                source={require('../../assets/image/facebook-logo.png')}
-              />
+              onPress={Actions.OtpAuth}
+              style={styles.buttonContainer}>
+              <Text style={styles.AndText}>{strings.phoneNumber.continue}</Text>
             </TouchableOpacity>
           </View>
-
-          {/* <TouchableOpacity onPress={() => callToAction('SignUp')}>
-            <Text style={styles.signUpView}>
-              Sign Up
-            </Text>
-          </TouchableOpacity> */}
-        </View>
+       
       </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 };
-export default Login;
+export default PhoneNumberScreen;
